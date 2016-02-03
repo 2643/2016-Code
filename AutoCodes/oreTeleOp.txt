@@ -1,0 +1,159 @@
+﻿package org.usfirst.frc.team2643.robot;
+
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+
+import org.usfirst.frc.team2643.robot.commands.ExampleCommand;
+import org.usfirst.frc.team2643.robot.subsystems.ExampleSubsystem;
+
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+
+
+        public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+        public static OI oi;
+
+
+    Command autonomousCommand;
+    //Variables start HERE!!
+    
+    Talon frontRightDTMotor = new Talon(1);
+    Talon backRightDTMotor = new Talon(0);
+    Talon frontLeftDTMotor = new Talon(2);
+    Talon backLeftDTMotor = new Talon(3);
+    Talon intakeMotor = new Talon(4);
+    Talon climberMotor = new Talon(0);
+    Talon shooterMotor = new Talon(5);
+    Joystick stick = new Joystick(0);
+    Joystick shooterControl = new Joystick(1);
+
+
+    RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
+   
+    //Variables End here.
+
+
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+                oi = new OI();
+        // instantiate the command used for the autonomous period
+        autonomousCommand = new ExampleCommand();
+    }
+        
+        public void disabledPeriodic() {
+                Scheduler.getInstance().run();
+        }
+
+
+    public void autonomousInit() {
+        // schedule the autonomous command (example)
+        if (autonomousCommand != null) autonomousCommand.start();
+    }
+
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+    }
+
+
+    public void teleopInit() {
+                // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to 
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) autonomousCommand.cancel();
+    }
+
+
+    /**
+     * This function is called when the disabled button is hit.
+     * You can use it to reset subsystems before shutting down.
+     */
+    public void disabledInit(){
+
+
+    }
+
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        Scheduler.getInstance().run();
+        double shooterStick = shooterControl.getY();
+        
+        arcade.arcadeDrive(stick);
+        shooterMotor.set(shooterStick);
+        boolean trigger = stick.getRawButton(1);
+        boolean reverse = stick.getRawButton(2);
+        boolean shooterTrigger = stick.getRawButton(3);
+        boolean button4 = stick.getRawButton(4);
+        boolean button5 = stick.getRawButton(5);
+        
+        if(trigger == true)
+        {
+                intakeMotor.set(0.5);                        //Sucks in boulders
+        }
+        else if(trigger && reverse == true)
+        {
+                intakeMotor.set(-0.5);                        //Reverses the direction of the intakes
+        }
+        else
+        {
+                intakeMotor.set(0);                                //Sets intake to 0
+        }
+        
+        
+        
+        if(button4 == true)
+        {
+                climberMotor.set(0.6);
+        }
+        else if(button5 == true)
+        {
+                climberMotor.set(-0.6);
+        }
+        else
+        {
+                climberMotor.set(0);
+        }
+        
+        if(shooterTrigger == true)
+        {
+                
+        }
+        else
+        {
+                shooterMotor.set(0);
+        }
+        
+        
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+        LiveWindow.run();
+    }
+}

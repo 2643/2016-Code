@@ -1,0 +1,167 @@
+package org.usfirst.frc.team2643.robot;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+    final String defaultAuto = "Default";
+    final String customAuto = "My Auto";
+    String autoSelected;
+    SendableChooser chooser;
+    //sets the barrier infront to twice the number in the 0th dashboard (.5 for 1, 1 for 2, 1.5 for 3, etc.)
+    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
+    //the distance from the starting position untill you're right infront of the obstacle
+    double distanceTillUp = 0;
+    //distance to go straight over the defense
+    double distanceOverDefense = 0;
+    //the distance required to pull down the bridge in encoder ticks
+    static double distanceToPullBackDrawbridge = 0;
+    //the amount of encoder ticks required to turn the robot from the left or right side of the
+    //tower to face the goals
+    static double amountToFaceSideGoalsInAuto = 0;
+    //sets the amount that you need to shift the starting positon to twice the number in the first dashboard
+    //and subtracts 2.5 so that 1.5 is -2, 2.0 is -1, 2.5 is 0, 3 is 1, 4 is 2 etc.
+    static int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
+    //the starting position of robot casted as an int
+    static int startingPosition = (int)(SmartDashboard.getNumber("DB/Slider 2" , 0));
+    //the goal that the robot needs to shoot at
+    //1 is left, 2 is middle and 3 is right
+    static int goal = (int)(SmartDashboard.getNumber("DB/Slider 3" , 0));
+    //the amount of encoder ticks to turn the robot 90 degrees
+    static double turn90Amount = 0;
+    //the distance between defenses; the length in encoder ticks
+    static double distanceBetweenDefenses = 0;
+    //the distance to from infront of the defense to directly infront of it so that its almost touching it
+    //in encoder ticks
+    static double distanceToDefense = 0;
+    //the rest of the distance required to cross the defense after you are up against it
+    //in encoder ticks
+    static double distanceToFinishDefense = 0;
+    //the distance from the top of the linear slide to the position at which its just
+    //on top of the drawbidge in encoder ticks
+    static double distanceToTopOfDrawbridge = 0;
+    //distance to move up to the mid goal in encoder ticks
+    static double distanceToMidGoal = 0;
+    //distance to move forward to the left or right goals in encoder ticks
+    static double distanceToFarGoal = 0;
+    //the desired shooting speed
+    static double desiredSpeed = 0;
+    //the speed at which the drawbridge needs to be lowered
+    static double lowerDrawbridgeSpeed = 0;
+    //speed incrementing for drive and hooks
+    static double driveSpeed = 0;
+    static double hookSpeed = 0;
+    //Motors!
+    static Talon backLeftMotor = new Talon(0);
+    static Talon backRightMotor = new Talon(1);
+    static Talon frontLeftMotor = new Talon(2);
+    static Talon frontRightMotor = new Talon(3);
+    static Talon leftHookMotor = new Talon(4);
+    static Talon rightHookMotor = new Talon(5);
+    static Talon intakeMotor = new Talon(6);
+    static Talon shooterMotor = new Talon(7);
+    //Encoders!
+    static Encoder leftDriveEncoder  = new Encoder(0,1);
+    static Encoder rightDriveEncoder = new Encoder(2,3);
+    static Encoder leftHookEncoder = new Encoder(4,5);
+    static Encoder rightHookEncoder = new Encoder(6,7);
+    static Encoder shooterEncoder = new Encoder(2,4);
+    //update later 
+    static double leftPerimeter = Math.PI*4;
+    static double leftDiameter = 4;
+    static double rightPerimeter = Math.PI*4;
+    static double rightDiameter = 5;    
+    
+ 
+    //Declaration of variables^
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+        SmartDashboard.putNumber("DB/Slider 0" , 0.0);
+        SmartDashboard.putNumber("DB/Slider 1" , 0.0);
+        SmartDashboard.putNumber("DB/Slider 2" , 0.0);
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("My Auto", customAuto);
+        SmartDashboard.putData("Auto choices", chooser);
+    }
+    
+	/**
+	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
+	 * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
+	 * Dashboard, remove all of the chooser code and uncomment the getString line to get the auto name from the text box
+	 * below the Gyro
+	 *
+	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
+	 * If using the SendableChooser make sure to add them to the chooser code above as well.
+	 */
+    public void autonomousInit() {
+    	autoSelected = (String) chooser.getSelected();
+//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+    	
+
+    }
+
+    /**
+     *This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    	//make the motor start spinning 
+    	//start the motors which start spinning to calculate the desired spinrate
+    	AutoMethods.startSpinning();
+    	//turn either left or right,move forward then turn to forward to face a defense
+    	AutoMethods.turnMove(shiftStartingPosition);
+    	//move up to a defense
+    	AutoMethods.moveForward(distanceTillUp,1);
+    	//an if chain for methods which checks which barrier is infrot and runs the code to cross them
+    	if(barrierInfront == 1){
+    		AutoMethods.crossDrawbridge();
+    	}else if(barrierInfront == 2){
+    		AutoMethods.crossPortcullis();
+    	}else if(barrierInfront == 3){
+    		AutoMethods.crossChevalDeFrise();
+    	}else if(barrierInfront == 4){
+    		AutoMethods.crossSallyPort();
+    	}else if(barrierInfront == 5){
+    		AutoMethods.crossMoat(distanceOverDefense);
+    	}else if(barrierInfront == 6){
+    		AutoMethods.crossRoughTerrain(distanceOverDefense);
+    	}else if(barrierInfront == 7){
+    		AutoMethods.crossRamparts(distanceOverDefense);
+    	}else if(barrierInfront == 8){
+    		AutoMethods.crossRockWall(distanceOverDefense);
+    	}
+    	//move left or right, forward then turn to face the goals
+    	AutoMethods.goToShootingPosition();
+    	//Shoot the ball!
+    	AutoMethods.shoot();
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    
+    }
+    
+}
