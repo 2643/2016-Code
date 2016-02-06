@@ -39,6 +39,9 @@ public class Robot extends IterativeRobot {
         Encoder rightEncoder = new Encoder(3,4);//update later
         Encoder leftEncoder = new Encoder(2,4);// update later
         int state = 0;
+        
+        double sallyStopHook = 
+        //update later with testing 
                         
     /**
      * This function is run when the robot is first started up and should be
@@ -95,27 +98,33 @@ public class Robot extends IterativeRobot {
                     case 0:
                     
                     //Portibelli thing
-                 if(lsEncoder.get() <= 50){
+                 if(lsEncoder.get() <= 50)
+                 {
                          //Update later
-                         fRWheel.set(0.2);
+                             fRWheel.set(0.2);
                              fLWheel.set(0.2);
                              bRWheel.set(0.2);
                              bLWheel.set(0.2);
                          state = 1;
+                         break;
+                         
                  }
                  else{
                          linearSlide.set(-0.5);
                          linearSlide2.set(-0.5);
                          if(lsEncoder.get() >= 50){
                                  linearSlide.set(0.0);
-                             linearSlide2.set(0.0);
-                             fRWheel.set(0.2);
+                                 linearSlide2.set(0.0);
+                                 fRWheel.set(0.2);
                                  fLWheel.set(0.2);
                                  bRWheel.set(0.2);
                                  bLWheel.set(0.2);
                                  state = 1;
+                                
+                                 
+                                 
                          }
-                 }
+                 break;
                     
                     case 1:
                             //goes up and then slowly moves down and then moves forward
@@ -132,9 +141,12 @@ public class Robot extends IterativeRobot {
                              bRWheel.set(0.5);
                              bLWheel.set(0.5);
                              state = 2;
+                            
+                             
                     }
-                    
                     break;
+                    
+                    
                     
                     case 2:
                             if(rightEncoder.get() >= 200 && leftEncoder.get() >= 200 ){
@@ -144,15 +156,13 @@ public class Robot extends IterativeRobot {
                                             linearSlide.set(0.0);
                                             linearSlide2.set(0.0);        
                                     }                
-                    }
                     break;
                     case 3: 
-                            //goes back to normal code
+                            
                             
         
                     }
-                            
-                    }
+                    
                     
                     
             
@@ -172,17 +182,16 @@ public class Robot extends IterativeRobot {
                                 if(lsEncoder.get() >= 200){
                                         state = 1;
                                 }
-                            }
                     
                     break;
                     
                     case 1:
                             linearSlide.set(-0.2);
-                        linearSlide2.set(-0.2);
+                            linearSlide2.set(-0.2);
                         //linear slides move down to hook the sally ports
                     if(lsEncoder.get() >= 250){
                             //update later
-                            linearSlide.set(0.0);
+                        linearSlide.set(0.0);
                         linearSlide2.set(0.0);
                         //linear slides stop to hook it
                         
@@ -200,14 +209,15 @@ public class Robot extends IterativeRobot {
                     case 2:
                             if(rightEncoder.get() >= 304){
                                     linearSlide.set(0.2);
-                                linearSlide2.set(0.2);
+                                    linearSlide2.set(0.2);
                                 //slide goes up to release the sally ports
                                 state = 3;
                             }
                             break;
                     case 3:
-                            if(lsEncoder.get() >= 200){
-                                    linearSlide.set(0.0);
+                    
+                            if(lsEncoder.get() >= sallyStopHook){
+                                linearSlide.set(0.0);
                                 linearSlide2.set(0.0);
                                 //linear slide stops
                                 state = 4;
@@ -215,36 +225,36 @@ public class Robot extends IterativeRobot {
                             break;
                     case 4:
                             //player controls
-                    
-                    
-            
-            }
+                            // ^ needs to be more specific 
             }
             
             if(stick.getRawButton(3)){
                     //drawbridge gotta move the robot slide thing down and then have the robot move backwards
                     switch(state){
                     
-                    
                     case 0:
                         if(lsEncoder.get() >= 200){
                                 //update later
                                 state = 1;
                         }
-                        else{
-                                        linearSlide.set(0.2);
-                                    linearSlide2.set(0.2);
+                        else
+                        {
+                             linearSlide.set(0.2);
+                             linearSlide2.set(0.2);
                 
-                                    if(lsEncoder.get() >= 200){
+                                if(lsEncoder.get() >= 200){
                                             state = 1;
-                                    }
+                        }
                         }
                                     break;
+                                    
+                                    
+                                    
                     
                     case 1:
                             //linear slide goes down 
                                     linearSlide.set(-0.2);
-                             linearSlide2.set(-0.2);
+                                    linearSlide2.set(-0.2);
                     //wheels moves backwards while the the linear slide goes down 
                                     fRWheel.set(-0.2);
                                  fLWheel.set(-0.2);
@@ -256,9 +266,9 @@ public class Robot extends IterativeRobot {
                                  linearSlide2.set(0.0);
                                  
                                  fRWheel.set(0.0);
-                             fLWheel.set(0.0);
-                             bRWheel.set(0.0);
-                             bLWheel.set(0.0);
+                                 fLWheel.set(0.0);
+                                 bRWheel.set(0.0);
+                                 bLWheel.set(0.0);
                              state = 2;
                                  }
                                  break;
