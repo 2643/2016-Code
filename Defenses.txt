@@ -95,20 +95,28 @@ public class Robot extends IterativeRobot {
             if(stick.getRawButton(1)){
                     switch(state){
                     
-                    case 0:
+                    rightEncoder.reset();
+                    leftEncoder.reset();
                     
+                    case 0:
                     //Portibelli thing
                  if(lsEncoder.get() <= 50)
                  {
                          //Update later
-                             frontRighttMotor.set(0.2);
+                             frontRightMotor.set(0.2);
                              frontLeftWheelMotor.set(0.2);
                              backRightMotor.set(0.2);
                              backLeftMotor.set(0.2);
+                             if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                          state = 1;
-                         break;
+                        }
                          
                  }
+                 break;
                  else{
                          linearSlide.set(-0.5);
                          linearSlide2.set(-0.5);
@@ -119,15 +127,18 @@ public class Robot extends IterativeRobot {
                                  frontLeftMotor.set(0.2);
                                  backRightMotor.set(0.2);
                                  backLeftMotor.set(0.2);
+                                 if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                                  state = 1;
-                                
-                                 
-                                 
+                                }
                          }
                  break;
                     
                     case 1:
-                            //goes up and then slowly moves down and then moves forward
+                            //linear slide goes up and then slowly moves down and then robo moves forward
                             
                             linearSlide.set(0.5);
                             linearSlide2.set(0.5);
