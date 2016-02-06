@@ -26,11 +26,11 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
         
-        Talon fRWheel = new Talon(4);
-        Talon fLWheel = new Talon(3);
-        Talon bRWheel = new Talon(5);
-        Talon bLWheel = new Talon(5);
-        //update later
+        Talon fRWheel = new Talon(3);
+        Talon fLWheel = new Talon(2);
+        Talon bRWheel = new Talon(1);
+        Talon bLWheel = new Talon(0);
+        
         
         Talon linearSlide = new Talon(3);
         Talon linearSlide2 = new Talon(4);
