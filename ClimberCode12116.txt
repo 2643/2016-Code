@@ -1,63 +1,86 @@
-﻿Talon lsMotor = new Talon(0);
-Talon frameMotor = new Talon(1);
+Talon lsMotor = new Talon(0);
+Talon backLeftMotor = new Talon(0);
+Talon backRightMotor = new Talon(0);
+Talon frontLeftMotor = new Talon(0);
+Talon frontRightMotor = new Talon(0);
 Joystick stick = new Joystick(0);
-Timer timerr = new Timer(0);
-DigitalInput lsTopLimitSwitch  = new Digital Input(0);
-DigitalInput lsBottomLimitSwitch  =  new DigitalInput(1);
-DigitalInput fTopLimitSwitch = new DigitalInput(2);
-DigitalInput fBottomLimitSwitch = new DigitalInput(3);
-Encoder lsEncoder = new Encoder(0);
-Encoder fEncoder = new Encoder(1);
-
+Timer clock = new Timer(0);
+Encoder lsEncoder = new Encoder(0,0);
+Encoder leftDriveEncoder = new Encoder(0,0);
+Encoder rightDriveEncoder = new Encoder (0,0);
 
 double highHeightBoundary = 80;
 double lowHeightBoundary = 20;
 
-
-
-
-
-
-timerr.start;
-
-
-//if the top/bottom limit switches are pressed linear slide stops if(lsTopLimitSwitch.get()||lsBottomLimitSwitch.get()){
-lsMotor.set(0);
-}
-
-
-//if the encoder is less than 20 slow down
-else if(lsEncoder.get() < lowHeightBoundary){
-        lsMotor.set(0.2);
-}
-//if the encoder is more than 80 slow down
-else if(lsEncoder.get() > highHeightBoundary){
-        lsMotor.set(0.2);
-
-
-//if you press button2 linear slide goes down
-else if(stick.getRawButton(2)){
-        lsMotor.set(-0.3);
-}
-//if you press button3 linear slide goes up
-else if(stick.getRawButton(3)){
-        lsMotor.set(0.3);
-}
-else
+if(clock.get > 130 && stick.getRawButton(9))
 {
-lsMotor.set(0);
-
-
-}
-
-
-
-
-//if we’ve been +130 sec in the competition and you press button 9 frame goes up
-if(timerr.get() > 130 && joystick.getRawButton(9) == true{
-        frameMotor.set(0.3);
-}
-//if we’ve been +130 in the competition and you press button 8 frame goes down
-else if(timerr.get() > 130 && joystick.getRawButton(8) == true{
-        frameMotor.set(-0.3);
+        int state = 0;
+        while(state < 3)
+        {
+                switch(state)
+                {
+                        //raise hooks
+                        case 0:
+                                //move slow as you near the top of the linear slide, if not close then go at normal speed
+                                if(lsEncoder.get() > highHeightBoundary - 30)
+                                {
+                                        //stop at the top, if not at the top go slow
+                                        if(lsEncoder.get() > highHeightBoundary)
+                                        {
+                                                lsMotor.set(0);
+                                                leftDriveEncoder.reset();
+                                                rightDriveEncoder.reset();
+                                                state = 1;
+                                        }
+                                        else
+                                        {
+                                                lsMotor.set(.2)
+                                        }
+                                }
+                                else
+                                {
+                                        lsMotor.set(.5);
+                                }
+                        break;
+                        //move forward a bit
+                        case 1:
+                                if(leftDriveEncoder.get() > 100 || rightDriveEncoder.get() < -100)
+                                {
+                                        backRightMotor.set(0);
+                                        frontRightMotor.set(0);
+                                        backLeftMotor.set(0);
+                                        frontLeftMotor.set(0);
+                                        case = 2;
+                                }
+                                else
+                                {
+                                        backRightMotor.set(-.3);
+                                        frontRightMotor.set(-.3);
+                                        backLeftMotor.set(.3);
+                                        frontLeftMotor.set(.3);
+                                }
+                        break;
+                        //pull robot up
+                        case 2:
+                                //as you near the bottom slow down
+                                if(lsEncoder.get() < lowHeightBoundary > 30)
+                                {
+                                        //stop at the bottom, if not at bottom then go slow
+                                        if(lsEncoder.get() < lowHeightBoundary)
+                                        {
+                                                lsMotor.set(0);
+                                                state = 3;
+                                        }
+                                        else
+                                        {
+                                                lsMotor.set(-.2)
+                                        }
+                                }
+                                else
+                                {
+                                        lsMotor.set(-.5);
+                                }
+                        break;
+                }
+        }
 }
