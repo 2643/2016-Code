@@ -52,10 +52,8 @@ public class Robot extends IterativeRobot
     
     //shooter speeds
     double intakeSpeedZ = (shooterStick.getZ()-1)/2;
-	private JoystickButton button = new JoystickButton(gamePad, 9);
 	
 	public boolean isPressed = false;
-    private boolean isToggled = false;
     
     public void robotInit()
     {
@@ -124,8 +122,8 @@ public class Robot extends IterativeRobot
     public void teleopPeriodic()
     {
         //vision code
-        //cam.getImage(frame);
-        //CameraServer.getInstance().setImage(frame);
+        cam.getImage(frame);
+        CameraServer.getInstance().setImage(frame);
 
     	Scheduler.getInstance().run();
     	while(true)
