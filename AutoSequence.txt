@@ -57,7 +57,7 @@ public class Robot extends IterativeRobot {
     Joystick shooterStick = new Joystick(1);
 
 
-    RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
+    RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
