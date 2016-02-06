@@ -1,0 +1,63 @@
+﻿Talon lsMotor = new Talon(0);
+Talon frameMotor = new Talon(1);
+Joystick stick = new Joystick(0);
+Timer timerr = new Timer(0);
+DigitalInput lsTopLimitSwitch  = new Digital Input(0);
+DigitalInput lsBottomLimitSwitch  =  new DigitalInput(1);
+DigitalInput fTopLimitSwitch = new DigitalInput(2);
+DigitalInput fBottomLimitSwitch = new DigitalInput(3);
+Encoder lsEncoder = new Encoder(0);
+Encoder fEncoder = new Encoder(1);
+
+
+double highHeightBoundary = 80;
+double lowHeightBoundary = 20;
+
+
+
+
+
+
+timerr.start;
+
+
+//if the top/bottom limit switches are pressed linear slide stops if(lsTopLimitSwitch.get()||lsBottomLimitSwitch.get()){
+lsMotor.set(0);
+}
+
+
+//if the encoder is less than 20 slow down
+else if(lsEncoder.get() < lowHeightBoundary){
+        lsMotor.set(0.2);
+}
+//if the encoder is more than 80 slow down
+else if(lsEncoder.get() > highHeightBoundary){
+        lsMotor.set(0.2);
+
+
+//if you press button2 linear slide goes down
+else if(stick.getRawButton(2)){
+        lsMotor.set(-0.3);
+}
+//if you press button3 linear slide goes up
+else if(stick.getRawButton(3)){
+        lsMotor.set(0.3);
+}
+else
+{
+lsMotor.set(0);
+
+
+}
+
+
+
+
+//if we’ve been +130 sec in the competition and you press button 9 frame goes up
+if(timerr.get() > 130 && joystick.getRawButton(9) == true{
+        frameMotor.set(0.3);
+}
+//if we’ve been +130 in the competition and you press button 8 frame goes down
+else if(timerr.get() > 130 && joystick.getRawButton(8) == true{
+        frameMotor.set(-0.3);
+}
