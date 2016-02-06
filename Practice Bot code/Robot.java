@@ -145,7 +145,7 @@ public class Robot extends IterativeRobot
     		{
     			frMotor.set(gamePad.getRawAxis(3)/-2);
             	flMotor.set(gamePad.getY()/2);
-            	frMotor.set(gamePad.getRawAxis(3)/-2);
+            	brMotor.set(gamePad.getRawAxis(3)/-2);
             	blMotor.set(gamePad.getY()/2);
     		}
     		else
