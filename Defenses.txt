@@ -26,10 +26,10 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
         
-        Talon fRWheel = new Talon(3);
-        Talon fLWheel = new Talon(2);
-        Talon bRWheel = new Talon(1);
-        Talon bLWheel = new Talon(0);
+        Talon frontRightMotor = new Talon(3);
+        Talon frontLeftMotor = new Talon(2);
+        Talon backRightMotor = new Talon(1);
+        Talon backLeftMotor = new Talon(0);
         
         
         Talon linearSlide = new Talon(3);
@@ -101,10 +101,10 @@ public class Robot extends IterativeRobot {
                  if(lsEncoder.get() <= 50)
                  {
                          //Update later
-                             fRWheel.set(0.2);
-                             fLWheel.set(0.2);
-                             bRWheel.set(0.2);
-                             bLWheel.set(0.2);
+                             frontRighttMotor.set(0.2);
+                             frontLeftWheelMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
                          state = 1;
                          break;
                          
@@ -115,10 +115,10 @@ public class Robot extends IterativeRobot {
                          if(lsEncoder.get() >= 50){
                                  linearSlide.set(0.0);
                                  linearSlide2.set(0.0);
-                                 fRWheel.set(0.2);
-                                 fLWheel.set(0.2);
-                                 bRWheel.set(0.2);
-                                 bLWheel.set(0.2);
+                                 frontRightMotor.set(0.2);
+                                 frontLeftMotor.set(0.2);
+                                 backRightMotor.set(0.2);
+                                 backLeftMotor.set(0.2);
                                  state = 1;
                                 
                                  
@@ -136,10 +136,10 @@ public class Robot extends IterativeRobot {
                             linearSlide.set(0.0);
                             linearSlide2.set(0.0);
                             
-                            fRWheel.set(0.5);
-                             fLWheel.set(0.5);
-                             bRWheel.set(0.5);
-                             bLWheel.set(0.5);
+                            frontRightMotor.set(0.5);
+                             frontLeftMotor.set(0.5);
+                             backRightMotor.set(0.5);
+                             backLeftMotor.set(0.5);
                              state = 2;
                             
                              
@@ -195,10 +195,10 @@ public class Robot extends IterativeRobot {
                         linearSlide2.set(0.0);
                         //linear slides stop to hook it
                         
-                            fRWheel.set(-0.5);
-                             fLWheel.set(0.0);
-                             bRWheel.set(-0.5);
-                             bLWheel.set(0.0);
+                            frontRightMotor.set(-0.5);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(-0.5);
+                             backLeftMotor.set(0.0);
 
 
                              //the right wheels move backwards to turn in a circle
@@ -256,28 +256,28 @@ public class Robot extends IterativeRobot {
                                     linearSlide.set(-0.2);
                                     linearSlide2.set(-0.2);
                     //wheels moves backwards while the the linear slide goes down 
-                                    fRWheel.set(-0.2);
-                                 fLWheel.set(-0.2);
-                                 bRWheel.set(-0.2);
-                                 bLWheel.set(-0.2);
+                                    frontRightMotor.set(-0.2);
+                                 frontLeftMotor.set(-0.2);
+                                 backRightMotor.set(-0.2);
+                                 backLeftMotor.set(-0.2);
                                  if(lsEncoder.get() <= 50 && rightEncoder.get() >= 300 && leftEncoder.get() >= 300){
                                  //update later
                                  linearSlide.set(0.0);
                                  linearSlide2.set(0.0);
                                  
-                                 fRWheel.set(0.0);
-                                 fLWheel.set(0.0);
-                                 bRWheel.set(0.0);
-                                 bLWheel.set(0.0);
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                              state = 2;
                                  }
                                  break;
                     case 2:
                             //the linear slide still stays down and the wheels move forward
-                            fRWheel.set(0.2);
-                             fLWheel.set(0.2);
-                             bRWheel.set(0.2);
-                             bLWheel.set(0.2);
+                            frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
                              if(rightEncoder.get() >= 120 && leftEncoder.get() >= 120){
                                      //update later 
                                      state = 3;
