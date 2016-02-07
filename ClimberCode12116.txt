@@ -1,8 +1,8 @@
 Talon lsMotor = new Talon(0);
 Talon backLeftMotor = new Talon(0);
-Talon backRightMotor = new Talon(0);
-Talon frontLeftMotor = new Talon(0);
-Talon frontRightMotor = new Talon(0);
+Talon backRightMotor = new Talon(1);
+Talon frontLeftMotor = new Talon(2);
+Talon frontRightMotor = new Talon(3);
 Joystick stick = new Joystick(0);
 Timer clock = new Timer(0);
 Encoder lsEncoder = new Encoder(0,0);
