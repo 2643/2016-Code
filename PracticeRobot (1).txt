@@ -48,9 +48,8 @@
 	   Talon intakeMotor = new Talon(4);
 	  // Talon climberMotor = new Talon(0);
 	   Talon shooterMotor = new Talon(5);
-	   Joystick stick = new Joystick(0);
-	   Joystick shooterStick = new Joystick(1);
-
+	   Joystick gamePad = new Joystick(0);
+	  
 	   RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
 	   final String defaultAuto = "Default";
 	   final String customAuto = "My Auto";
