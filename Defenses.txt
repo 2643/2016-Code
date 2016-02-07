@@ -206,6 +206,7 @@ public class Robot extends IterativeRobot {
                     //sally port gotta move the machine like 90 degrees to turn the thing 
                     switch(state){
                     rightEncoder.reset();
+                    leftEncoder.reset();
                     case 0:
                     if(lsEncoder.get() >= 200){
                             //encoder update later
@@ -220,12 +221,21 @@ public class Robot extends IterativeRobot {
                     
                     break;
                     case 1:
-                            frontRightMotor.set(0.2);
+                             frontRightMotor.set(0.2);
                              frontLeftMotor.set(0.2);
                              backRightMotor.set(0.2);
                              backLeftMotor.set(0.2);
+                        if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                        //encoder update later
+                             frontRightMotor.set(0.0);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             backLeftMotor.set(0.0);
+                             state = 2;
+                             }
+                             break;
                     case 2:
-                    
+                    rightEncoder.reset();
                             linearSlide.set(-0.2);
                             linearSlide2.set(-0.2);
                         //linear slides move down to hook the sally ports
@@ -235,7 +245,7 @@ public class Robot extends IterativeRobot {
                         linearSlide2.set(0.0);
                         //linear slides stop to hook it
                         }
-                            frontRightMotor.set(-0.5);
+                           frontRightMotor.set(-0.5);
                              frontLeftMotor.set(0.0);
                              backRightMotor.set(-0.5);
                              backLeftMotor.set(0.0);
@@ -247,39 +257,38 @@ public class Robot extends IterativeRobot {
                     break;
                     
                     case 3:
-                            if(rightEncoder.get() >= ){
-                                    linearSlide.set(0.2);
-                                    linearSlide2.set(0.2);
-                                //slide goes up to release the sally ports
+                            if(rightEncoder.get() >= -150){
+                            //encoder update later
+                             frontRightMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             
+                                  
                                 state = 4;
                             }
                             break;
                     case 4:
-                    
-                            if(lsEncoder.get() >= sallyStopHook){
-                                linearSlide.set(0.0);
-                                linearSlide2.set(0.0);
-                                //linear slide stops
-                                state = 5;
-                            }
-                            break;
-                    case 5:
-                           double yPosition = driveStick.getY();
+                    	   double yPosition = driveStick.getY();
     	                   double xPosition = driveStick.getX();
     	    
     	                   frDriveTrainWheel.set(yPosition-xPosition);
     	                   brDriveTrainWheel.set(yPosition-xPosition);
     	                   flDriveTrainWheel.set(yPosition+xPosition);
     	                   blDriveTrainWheel.set(yPosition+xPosition);
-            }
+                              
+                                state = 5;
+                            
+                            break;
+                 
+            
             
             if(stick.getRawButton(3)){
                     //drawbridge gotta move the robot slide thing down and then have the robot move backwards
                     switch(state){
-                    
+                    rightEncoder.reset();
+                    leftEncoder.reset();
                     case 0:
                         if(lsEncoder.get() >= 200){
-                                //update later
+                                //encoder update later
                                 state = 1;
                         }
                         else
@@ -325,7 +334,7 @@ public class Robot extends IterativeRobot {
                              backRightMotor.set(0.2);
                              backLeftMotor.set(0.2);
                              if(rightEncoder.get() >= 120 && leftEncoder.get() >= 120){
-                                     //update later 
+                                     //encoder update later 
                                      state = 3;
                              }
                     break;
