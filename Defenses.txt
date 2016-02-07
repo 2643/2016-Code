@@ -34,14 +34,18 @@ public class Robot extends IterativeRobot {
         
         Talon linearSlide = new Talon(3);
         Talon linearSlide2 = new Talon(4);
-        Joystick stick = new Joystick(0);
+        Joystick stick = new Joystick(5);
         Encoder lsEncoder = new Encoder(9,0);//update later
         Encoder rightEncoder = new Encoder(3,4);//update later
         Encoder leftEncoder = new Encoder(2,4);// update later
         int state = 0;
-        
-        double sallyStopHook = 
-        //update later with testing 
+        Talon frDriveTrainWheel = new Talon (1);
+	    Talon brDriveTrainWheel = new Talon (2);
+	    Talon flDriveTrainWheel = new Talon (3);
+	    Talon blDriveTrainWheel = new Talon (4);
+	    Joystick driveStick = new Joystick (5);
+	    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	    public static OI oi;
                         
     /**
      * This function is run when the robot is first started up and should be
@@ -90,7 +94,15 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+     
+        double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frDriveTrainWheel.set(yPosition-xPosition);
+    	    brDriveTrainWheel.set(yPosition-xPosition);
+    	    flDriveTrainWheel.set(yPosition+xPosition);
+    	    blDriveTrainWheel.set(yPosition+xPosition);
+    	       
              
             if(stick.getRawButton(1)){
                     switch(state){
@@ -128,6 +140,7 @@ public class Robot extends IterativeRobot {
                                  backRightMotor.set(0.2);
                                  backLeftMotor.set(0.2);
                                  if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 //Update encoder later
                                  frontRightMotor.set(0.0);
                                  frontLeftMotor.set(0.0);
                                  backRightMotor.set(0.0);
@@ -139,18 +152,20 @@ public class Robot extends IterativeRobot {
                     
                     case 1:
                             //linear slide goes up and then slowly moves down and then robo moves forward
+                            rightEncoder.reset();
+                            leftEncoder.reset();
                             
                             linearSlide.set(0.5);
                             linearSlide2.set(0.5);
                     if(lsEncoder.get() >= 200){
-                            //update later
+                            // encoder update later
                             linearSlide.set(0.0);
                             linearSlide2.set(0.0);
                             
-                            frontRightMotor.set(0.5);
-                             frontLeftMotor.set(0.5);
-                             backRightMotor.set(0.5);
-                             backLeftMotor.set(0.5);
+                             frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
                              state = 2;
                             
                              
@@ -160,17 +175,26 @@ public class Robot extends IterativeRobot {
                     
                     
                     case 2:
+                           
                             if(rightEncoder.get() >= 200 && leftEncoder.get() >= 200 ){
                                     linearSlide.set(-0.4);
                                     linearSlide2.set(-0.4);
                                     if(lsEncoder.get() <= 50){
                                             linearSlide.set(0.0);
-                                            linearSlide2.set(0.0);        
+                                            linearSlide2.set(0.0); 
+                                            state = 3;
+                                            }
                                     }                
                     break;
                     case 3: 
                             
-                            //arcade drive
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frDriveTrainWheel.set(yPosition-xPosition);
+    	                   brDriveTrainWheel.set(yPosition-xPosition);
+    	                   flDriveTrainWheel.set(yPosition+xPosition);
+    	                   blDriveTrainWheel.set(yPosition+xPosition);
         
                     }
                     
@@ -181,31 +205,36 @@ public class Robot extends IterativeRobot {
             if(stick.getRawButton(2)){
                     //sally port gotta move the machine like 90 degrees to turn the thing 
                     switch(state){
-                    
+                    rightEncoder.reset();
                     case 0:
                     if(lsEncoder.get() >= 200){
-                            //update later
+                            //encoder update later
                             state = 1;
                     }
                             else{
-                                    linearSlide.set(0.2);
+                                linearSlide.set(0.2);
                                 linearSlide2.set(0.2);
                                 if(lsEncoder.get() >= 200){
-                                        state = 1;
+                                        state = 2;
                                 }
                     
                     break;
-                    
                     case 1:
+                            frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                    case 2:
+                    
                             linearSlide.set(-0.2);
                             linearSlide2.set(-0.2);
                         //linear slides move down to hook the sally ports
-                    if(lsEncoder.get() >= 250){
-                            //update later
+                    if(lsEncoder.get() <= 150){
+                            //encoder update later
                         linearSlide.set(0.0);
                         linearSlide2.set(0.0);
                         //linear slides stop to hook it
-                        
+                        }
                             frontRightMotor.set(-0.5);
                              frontLeftMotor.set(0.0);
                              backRightMotor.set(-0.5);
@@ -213,30 +242,35 @@ public class Robot extends IterativeRobot {
 
 
                              //the right wheels move backwards to turn in a circle
-                             state = 2;
-                    }
+                             state = 3;
+                    
                     break;
                     
-                    case 2:
-                            if(rightEncoder.get() >= 304){
+                    case 3:
+                            if(rightEncoder.get() >= ){
                                     linearSlide.set(0.2);
                                     linearSlide2.set(0.2);
                                 //slide goes up to release the sally ports
-                                state = 3;
+                                state = 4;
                             }
                             break;
-                    case 3:
+                    case 4:
                     
                             if(lsEncoder.get() >= sallyStopHook){
                                 linearSlide.set(0.0);
                                 linearSlide2.set(0.0);
                                 //linear slide stops
-                                state = 4;
+                                state = 5;
                             }
                             break;
-                    case 4:
-                            //player controls
-                            // ^ needs to be more specific 
+                    case 5:
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frDriveTrainWheel.set(yPosition-xPosition);
+    	                   brDriveTrainWheel.set(yPosition-xPosition);
+    	                   flDriveTrainWheel.set(yPosition+xPosition);
+    	                   blDriveTrainWheel.set(yPosition+xPosition);
             }
             
             if(stick.getRawButton(3)){
@@ -283,6 +317,7 @@ public class Robot extends IterativeRobot {
                              state = 2;
                                  }
                                  break;
+                                 
                     case 2:
                             //the linear slide still stays down and the wheels move forward
                             frontRightMotor.set(0.2);
@@ -294,8 +329,15 @@ public class Robot extends IterativeRobot {
                                      state = 3;
                              }
                     break;
+                    
                     case 3:
-                            //player control
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frDriveTrainWheel.set(yPosition-xPosition);
+    	                   brDriveTrainWheel.set(yPosition-xPosition);
+    	                   flDriveTrainWheel.set(yPosition+xPosition);
+    	                   blDriveTrainWheel.set(yPosition+xPosition);
                     break;
                     }
             }        
