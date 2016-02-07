@@ -1,0 +1,42 @@
+﻿/**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+
+
+    }
+
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+            
+            Talon backLeftMotor = new Talon(0);
+            Talon backRightMotor = new Talon(1);
+            Talon frontLeftMotor = new Talon(2);
+            Talon frontRightMotor = new Talon(3);
+            Joystick leftStick = new Joystick(0);
+            Joystick rightStick = new Joystick(1);
+            
+            double leftPosition = leftStick.getY();
+            double rightPosition = rightStick.getRawAxis(3);
+            
+            backLeftMotor.set(leftPosition);
+            backRightMotor.set(rightPosition);
+            frontLeftMotor.set(leftPosition);
+            frontRightMotor.set(rightPosition);
+            
+            
+            
+        
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    
+    }
+    
+}
