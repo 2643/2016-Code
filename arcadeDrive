@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	//change variable numbers later
-	Talon frDriveTrainWheel = new Talon (1);
-	Talon brDriveTrainWheel = new Talon (2);
-	Talon flDriveTrainWheel = new Talon (3);
-	Talon blDriveTrainWheel = new Talon (4);
+	Talon frontRightMotor = new Talon (3);
+	Talon backRightMotor = new Talon (1);
+	Talon frontLeftMotor = new Talon (2);
+	Talon backLeftMotor = new Talon (0);
 	Joystick driveStick = new Joystick (5);
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
@@ -107,10 +107,10 @@ public class Robot extends IterativeRobot {
     	   double yPosition = driveStick.getY();
     	   double xPosition = driveStick.getX();
     	    
-    	    frDriveTrainWheel.set(yPosition-xPosition);
-    	    brDriveTrainWheel.set(yPosition-xPosition);
-    	    flDriveTrainWheel.set(yPosition+xPosition);
-    	    blDriveTrainWheel.set(yPosition+xPosition);
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMotor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
     	    
     	Scheduler.getInstance().run();
     }
