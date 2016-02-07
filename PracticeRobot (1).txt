@@ -41,10 +41,10 @@
 	   Image frame;
 	   //camera variables end
 
-	       Talon frontRightDTMotor = new Talon(1);
-	   Talon backRightDTMotor = new Talon(0);
-	   Talon frontLeftDTMotor = new Talon(2);
-	   Talon backLeftDTMotor = new Talon(3);
+	       Talon frontRightMotor = new Talon(3);
+	   Talon backRightMotor = new Talon(1);
+	   Talon frontLeftMotor = new Talon(2);
+	   Talon backLeftMotor = new Talon(0);
 	   Talon intakeMotor = new Talon(4);
 	  // Talon climberMotor = new Talon(0);
 	   Talon shooterMotor = new Talon(5);
@@ -143,15 +143,15 @@
 	//double shooterStick = shooterStick.getY();
 	        arcade.arcadeDrive(stick, true);
 	        arcade.tankDrive(stick, shooterStick, true);
-	           /*frontRightDTMotor.set((-.3)*shooterStick.getY());
-	           frontLeftDTMotor.set((.3)*stick.getY());
-	           backRightDTMotor.set((-.3)*shooterStick.getY());
-	           backLeftDTMotor.set((.3)*stick.getY());*\
+	           /*frontRightMotor.set((-.3)*shooterStick.getY());
+	           frontLeftMotor.set((.3)*stick.getY());
+	           backRightMotor.set((-.3)*shooterStick.getY());
+	           backLeftMotor.set((.3)*stick.getY());*\
 	        // Arcade drive code in case above dcode fails
-	      /*  frontLeftDTMotor.set(-stick.getY() + stick.getX());
-	        backLeftDTMotor.set(-stick.getY() + stick.getX());
-	        frontRightDTMotor.set(stick.getY() - stick.getX());
-	        backRightDTMotor.set(stick.getY() - stick.getX());*/
+	      /*  frontLeftMotor.set(-stick.getY() + stick.getX());
+	        backLeftMotor.set(-stick.getY() + stick.getX());
+	        frontRightMotor.set(stick.getY() - stick.getX());
+	        backRightMotor.set(stick.getY() - stick.getX());*/
 	       //shooterMotor.set(shooterStick);
 	       double intakeSpeedZ = (shooterStick.getZ()-1)/2;
 	       boolean trigger = stick.getRawButton(1);
