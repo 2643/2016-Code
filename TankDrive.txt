@@ -16,8 +16,7 @@
             Talon backRightMotor = new Talon(1);
             Talon frontLeftMotor = new Talon(2);
             Talon frontRightMotor = new Talon(3);
-            Joystick leftStick = new Joystick(0);
-            Joystick rightStick = new Joystick(1);
+            Joystick gamePad = new Joystick(0);
             
             double leftPosition = leftStick.getY();
             double rightPosition = rightStick.getRawAxis(3);
