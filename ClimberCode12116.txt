@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
         Talon lsMotor = new Talon(0);
         Talon frameMotor = new Talon(1);
-        Joystick stick = new Joystick(0);
+        Joystick gamePad = new Joystick(0);
         Timer timerr = new Timer();
         DigitalInput lsTopLimitSwitch  = new DigitalInput(0);
         DigitalInput lsBottomLimitSwitch  =  new DigitalInput(1);
