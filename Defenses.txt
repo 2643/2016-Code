@@ -39,10 +39,7 @@ public class Robot extends IterativeRobot {
         Encoder rightEncoder = new Encoder(3,4);//update later
         Encoder leftEncoder = new Encoder(2,4);// update later
         int state = 0;
-        Talon frDriveTrainWheel = new Talon (1);
-	    Talon brDriveTrainWheel = new Talon (2);
-	    Talon flDriveTrainWheel = new Talon (3);
-	    Talon blDriveTrainWheel = new Talon (4);
+        
 	    Joystick driveStick = new Joystick (5);
 	    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	    public static OI oi;
@@ -98,10 +95,10 @@ public class Robot extends IterativeRobot {
         double yPosition = driveStick.getY();
     	   double xPosition = driveStick.getX();
     	    
-    	    frDriveTrainWheel.set(yPosition-xPosition);
-    	    brDriveTrainWheel.set(yPosition-xPosition);
-    	    flDriveTrainWheel.set(yPosition+xPosition);
-    	    blDriveTrainWheel.set(yPosition+xPosition);
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMOtor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
     	       
              
             if(stick.getRawButton(1)){
@@ -191,10 +188,10 @@ public class Robot extends IterativeRobot {
                            double yPosition = driveStick.getY();
     	                   double xPosition = driveStick.getX();
     	    
-    	                   frDriveTrainWheel.set(yPosition-xPosition);
-    	                   brDriveTrainWheel.set(yPosition-xPosition);
-    	                   flDriveTrainWheel.set(yPosition+xPosition);
-    	                   blDriveTrainWheel.set(yPosition+xPosition);
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMOtor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMortor.set(yPosition+xPosition);
         
                     }
                     
@@ -270,10 +267,10 @@ public class Robot extends IterativeRobot {
                     	   double yPosition = driveStick.getY();
     	                   double xPosition = driveStick.getX();
     	    
-    	                   frDriveTrainWheel.set(yPosition-xPosition);
-    	                   brDriveTrainWheel.set(yPosition-xPosition);
-    	                   flDriveTrainWheel.set(yPosition+xPosition);
-    	                   blDriveTrainWheel.set(yPosition+xPosition);
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
                               
                                 state = 5;
                             
@@ -343,10 +340,10 @@ public class Robot extends IterativeRobot {
                            double yPosition = driveStick.getY();
     	                   double xPosition = driveStick.getX();
     	    
-    	                   frDriveTrainWheel.set(yPosition-xPosition);
-    	                   brDriveTrainWheel.set(yPosition-xPosition);
-    	                   flDriveTrainWheel.set(yPosition+xPosition);
-    	                   blDriveTrainWheel.set(yPosition+xPosition);
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
                     break;
                     }
             }        
