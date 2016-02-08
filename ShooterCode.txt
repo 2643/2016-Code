@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;
     //Variables
     Joystick gamePad = new Joystick(0);
-    Talon shooterMotor = new Talon(0);
+    Talon shooterMotor = new Talon(8);
     final double DISTANCE_POWER_CONSTANT = 0;
     double currentRPS = 0;
     double currentPower = 0;
