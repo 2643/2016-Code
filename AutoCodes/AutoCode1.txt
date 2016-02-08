@@ -69,8 +69,8 @@ public class Robot extends IterativeRobot {
     static Talon frontRightMotor = new Talon(3);
     static Talon leftHookMotor = new Talon(4);
     static Talon rightHookMotor = new Talon(5);
-    static Talon intakeMotor = new Talon(6);
-    static Talon shooterMotor = new Talon(7);
+    static Talon intakeMotor = new Talon(7);
+    static Talon shooterMotor = new Talon(8);
     //Encoders!
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
