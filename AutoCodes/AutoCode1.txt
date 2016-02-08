@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot {
     static Encoder rightDriveEncoder = new Encoder(2,3);
     static Encoder leftHookEncoder = new Encoder(4,5);
     static Encoder rightHookEncoder = new Encoder(6,7);
-    static Encoder shooterEncoder = new Encoder(2,4);
+    static Encoder shooterEncoder = new Encoder(8,9);
     //update later 
     static double leftPerimeter = Math.PI*4;
     static double leftDiameter = 4;
