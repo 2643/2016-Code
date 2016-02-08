@@ -46,10 +46,10 @@ public class Robot extends IterativeRobot {
     Image frame;
     //camera variables end
         
-        static Talon frontRightDTMotor = new Talon(1);
-    static Talon backRightDTMotor = new Talon(0);
-    static Talon frontLeftDTMotor = new Talon(2);
-    static Talon backLeftDTMotor = new Talon(3);
+        static Talon frontRightMotor = new Talon(1);
+    static Talon backRightMotor = new Talon(0);
+    static Talon frontLeftMotor = new Talon(2);
+    static Talon backLeftMotor = new Talon(3);
     Talon intakeMotor = new Talon(4);
    // Talon climberMotor = new Talon(0);
     Talon shooterMotor = new Talon(5);
@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
     static Joystick gamePad = new Joystick (2);
 
 
-    RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
+    RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -143,16 +143,16 @@ public class Robot extends IterativeRobot {
         
          arcade.arcadeDrive(stick, true);
          arcade.tankDrive(stick, shooterStick, true);
-            /*frontRightDTMotor.set((-.3)*shooterStick.getY());
-            frontLeftDTMotor.set((.3)*stick.getY());
-            backRightDTMotor.set((-.3)*shooterStick.getY());
-            backLeftDTMotor.set((.3)*stick.getY());*\
+            /*frontRightMotor.set((-.3)*shooterStick.getY());
+            frontLeftMotor.set((.3)*stick.getY());
+            backRightMotor.set((-.3)*shooterStick.getY());
+            backLeftMotor.set((.3)*stick.getY());*\
          // Arcade drive code in case above dcode fails
           
-       /*  frontLeftDTMotor.set(-stick.getY() + stick.getX());
-         backLeftDTMotor.set(-stick.getY() + stick.getX());
-         frontRightDTMotor.set(stick.getY() - stick.getX());
-         backRightDTMotor.set(stick.getY() - stick.getX());*/
+       /*  frontLeftMotor.set(-stick.getY() + stick.getX());
+         backLeftMotor.set(-stick.getY() + stick.getX());
+         frontRightMotor.set(stick.getY() - stick.getX());
+         backRightMotor.set(stick.getY() - stick.getX());*/
          
         //shooterMotor.set(shooterStick);
         
@@ -276,10 +276,10 @@ public static void gamepadControl(){
         double leftYPosition = gamePad.getRawAxis(1);
         double rightYPosition = gamePad.getRawAxis(5);
         
-        frontRightDTMotor.set(rightYPosition);
-        backRightDTMotor.set(rightYPosition);
-        frontLeftDTMotor.set(leftYPosition);
-        backLeftDTMotor.set(leftYPosition);
+        frontRightMotor.set(rightYPosition);
+        backRightMotor.set(rightYPosition);
+        frontLeftMotor.set(leftYPosition);
+        backLeftMotor.set(leftYPosition);
         }
     private void getRawButton(int i) {
                 // TODO Auto-generated method stub
