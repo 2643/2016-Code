@@ -16,7 +16,7 @@ Talon backRightMotor = new Talon(1);
 Talon frontLeftMotor = new Talon(2);
 Talon frontRightMotor = new Talon(3);
 Joystick gamePad = new Joystick(0);
-Joystick gamePad = new Joystick(1);
+Joystick gamePad1 = new Joystick(1);
 
 
 
