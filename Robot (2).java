@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	Talon backRightMotor = new Talon (1);
 	Talon frontLeftMotor = new Talon (2);
 	Talon backLeftMotor = new Talon (0);
-	Joystick gamePad = new Joystick (5);
+	Joystick gamePad = new Joystick (0);
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 
