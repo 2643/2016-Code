@@ -1,13 +1,13 @@
-Talon lsMotor = new Talon(0);
+Talon linearSlide = new Talon(3);
 Talon backLeftMotor = new Talon(0);
 Talon backRightMotor = new Talon(1);
 Talon frontLeftMotor = new Talon(2);
 Talon frontRightMotor = new Talon(3);
-Joystick stick = new Joystick(0);
+Joystick gamePad = new Joystick(0);
 Timer clock = new Timer(0);
-Encoder lsEncoder = new Encoder(0,0);
-Encoder leftDriveEncoder = new Encoder(0,0);
-Encoder rightDriveEncoder = new Encoder (0,0);
+Encoder slideEncoder = new Encoder(0,1);
+Encoder leftDriveEncoder = new Encoder(4,5);
+Encoder rightDriveEncoder = new Encoder (2,3);
 
 double highHeightBoundary = 80;
 double lowHeightBoundary = 20;
@@ -22,24 +22,24 @@ if(clock.get > 130 && stick.getRawButton(9))
                         //raise hooks
                         case 0:
                                 //move slow as you near the top of the linear slide, if not close then go at normal speed
-                                if(lsEncoder.get() > highHeightBoundary - 30)
+                                if(slideEncoder.get() > highHeightBoundary - 30)
                                 {
                                         //stop at the top, if not at the top go slow
-                                        if(lsEncoder.get() > highHeightBoundary)
+                                        if(slideEncoder.get() > highHeightBoundary)
                                         {
-                                                lsMotor.set(0);
+                                                linearSlide.set(0);
                                                 leftDriveEncoder.reset();
                                                 rightDriveEncoder.reset();
                                                 state = 1;
                                         }
                                         else
                                         {
-                                                lsMotor.set(.2)
+                                                linearSlide.set(.2)
                                         }
                                 }
                                 else
                                 {
-                                        lsMotor.set(.5);
+                                        linearSlide.set(.5);
                                 }
                         break;
                         //move forward a bit
@@ -63,22 +63,22 @@ if(clock.get > 130 && stick.getRawButton(9))
                         //pull robot up
                         case 2:
                                 //as you near the bottom slow down
-                                if(lsEncoder.get() < lowHeightBoundary > 30)
+                                if(slideEncoder.get() < lowHeightBoundary > 30)
                                 {
                                         //stop at the bottom, if not at bottom then go slow
-                                        if(lsEncoder.get() < lowHeightBoundary)
+                                        if(slideEncoder.get() < lowHeightBoundary)
                                         {
-                                                lsMotor.set(0);
+                                                linearSlide.set(0);
                                                 state = 3;
                                         }
                                         else
                                         {
-                                                lsMotor.set(-.2)
+                                                linearSlide.set(-.2)
                                         }
                                 }
                                 else
                                 {
-                                        lsMotor.set(-.5);
+                                        linearSlide.set(-.5);
                                 }
                         break;
                 }
