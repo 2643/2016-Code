@@ -35,9 +35,9 @@ public class Robot extends IterativeRobot {
         Talon linearSlide = new Talon(4);
         Talon linearSlide2 = new Talon(5);
         Joystick gamePad = new Joystick(0);
-        Encoder slideEncoder = new Encoder(0,1);
+        Encoder slideEncoder = new Encoder(4,5);
         Encoder rightDriveEncoder = new Encoder(2,3);
-        Encoder leftDriveEncoder = new Encoder(4,5);
+        Encoder leftDriveEncoder = new Encoder(0,1);
         int state = 0;
                         
     /**
