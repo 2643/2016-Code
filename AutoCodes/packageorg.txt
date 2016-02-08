@@ -54,8 +54,8 @@ public class Robot extends IterativeRobot {
    // Talon climberMotor = new Talon(0);
     Talon shooterMotor = new Talon(5);
     Joystick stick = new Joystick(0);
-    Joystick shooterStick = new Joystick(1);
-    static Joystick gamePad = new Joystick (2);
+    Joystick gamePad2 = new Joystick(2);
+    static Joystick gamePad = new Joystick (1);
 
 
     RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
@@ -139,13 +139,13 @@ public class Robot extends IterativeRobot {
         System.out.println(targetWidth);*/
         //vision code end
         
-//double shooterStick = shooterStick.getY();
+//double gamepad2 = gamePad2.getY();
         
          arcade.arcadeDrive(stick, true);
-         arcade.tankDrive(stick, shooterStick, true);
-            /*frontRightMotor.set((-.3)*shooterStick.getY());
+         arcade.tankDrive(stick, gamePad2, true);
+            /*frontRightMotor.set((-.3)*gamePad2.getY());
             frontLeftMotor.set((.3)*stick.getY());
-            backRightMotor.set((-.3)*shooterStick.getY());
+            backRightMotor.set((-.3)*gamePad2.getY());
             backLeftMotor.set((.3)*stick.getY());*\
          // Arcade drive code in case above dcode fails
           
@@ -154,22 +154,22 @@ public class Robot extends IterativeRobot {
          frontRightMotor.set(stick.getY() - stick.getX());
          backRightMotor.set(stick.getY() - stick.getX());*/
          
-        //shooterMotor.set(shooterStick);
+        //shooterMotor.set(gamePad2);
         
-        double intakeSpeedZ = (shooterStick.getZ()-1)/2;
+        double intakeSpeedZ = (gamePad2.getZ()-1)/2;
         
         boolean trigger = stick.getRawButton(1);
         boolean two = stick.getRawButton(2);
-        boolean shooterButton1 = shooterStick.getRawButton(1);
-        boolean shooterButton2 = shooterStick.getRawButton(2);
-        boolean shooterButton3 = shooterStick.getRawButton(3);
-        boolean shooterButton4 = shooterStick.getRawButton(4);
-        boolean shooterButton5 = shooterStick.getRawButton(5);
-        boolean shooterButton6 = shooterStick.getRawButton(6);
-        boolean shooterButton7 = shooterStick.getRawButton(7);
-        boolean shooterButton8 = shooterStick.getRawButton(8);
-        boolean shooterButton9 = shooterStick.getRawButton(9);
-        boolean shooterButton10 = shooterStick.getRawButton(10);
+        boolean shooterButton1 = gamePad2.getRawButton(1);
+        boolean shooterButton2 = gamePad2.getRawButton(2);
+        boolean shooterButton3 = gamePad2.getRawButton(3);
+        boolean shooterButton4 = gamePad2.getRawButton(4);
+        boolean shooterButton5 = gamePad2.getRawButton(5);
+        boolean shooterButton6 = gamePad2.getRawButton(6);
+        boolean shooterButton7 = gamePad2.getRawButton(7);
+        boolean shooterButton8 = gamePad2.getRawButton(8);
+        boolean shooterButton9 = gamePad2.getRawButton(9);
+        boolean shooterButton10 = gamePad2.getRawButton(10);
        // boolean shooterTrigger = stick.getRawButton(3);
        // boolean button4 = stick.getRawButton(4);
         //boolean button5 = stick.getRawButton(5);
