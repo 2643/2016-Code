@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	Talon backRightMotor = new Talon (1);
 	Talon frontLeftMotor = new Talon (2);
 	Talon backLeftMotor = new Talon (0);
-	Joystick driveStick = new Joystick (5);
+	Joystick gamePad = new Joystick (5);
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 
@@ -104,8 +104,8 @@ public class Robot extends IterativeRobot {
      */
  
     public void teleopPeriodic() {
-    	   double yPosition = driveStick.getY();
-    	   double zPosition = driveStick.getZ();
+    	   double yPosition = gamePad.getY();
+    	   double zPosition = gamePad.getZ();
     	    
     	    frontRightMotor.set(zPosition);
     	    backFrontMotor.set(zPosition);
