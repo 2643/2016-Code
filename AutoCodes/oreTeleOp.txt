@@ -31,18 +31,18 @@ public class Robot extends IterativeRobot {
     Command autonomousCommand;
     //Variables start HERE!!
     
-    Talon frontRightDTMotor = new Talon(1);
-    Talon backRightDTMotor = new Talon(0);
-    Talon frontLeftDTMotor = new Talon(2);
-    Talon backLeftDTMotor = new Talon(3);
+    Talon frontRightMotor = new Talon(3);
+    Talon backRightMotor = new Talon(1);
+    Talon frontLeftMotor = new Talon(2);
+    Talon backLeftMotor = new Talon(0);
     Talon intakeMotor = new Talon(4);
     Talon climberMotor = new Talon(0);
     Talon shooterMotor = new Talon(5);
-    Joystick stick = new Joystick(0);
-    Joystick shooterControl = new Joystick(1);
+    Joystick gamePad = new Joystick(0);
+    Joystick gamePad2(shooterControl) = new Joystick(1);
 
 
-    RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
+    RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
    
     //Variables End here.
 
@@ -100,15 +100,15 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        double shooterStick = shooterControl.getY();
+        double shooterStick = gamePad2.getY();
         
-        arcade.arcadeDrive(stick);
+        arcade.arcadeDrive(gamePad);
         shooterMotor.set(shooterStick);
-        boolean trigger = stick.getRawButton(1);
-        boolean reverse = stick.getRawButton(2);
-        boolean shooterTrigger = stick.getRawButton(3);
-        boolean button4 = stick.getRawButton(4);
-        boolean button5 = stick.getRawButton(5);
+        boolean trigger = gamePad.getRawButton(1);
+        boolean reverse = gamePad.getRawButton(2);
+        boolean shooterTrigger = gamePad.getRawButton(3);
+        boolean button4 = gamePad.getRawButton(4);
+        boolean button5 = gamePad.getRawButton(5);
         
         if(trigger == true)
         {
