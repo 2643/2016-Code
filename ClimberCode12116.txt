@@ -1,4 +1,4 @@
-Talon linearSlide = new Talon(3);
+Talon linearSlide = new Talon(4);
 Talon backLeftMotor = new Talon(0);
 Talon backRightMotor = new Talon(1);
 Talon frontLeftMotor = new Talon(2);
