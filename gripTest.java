@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
     Image frame;
     AxisCamera camera;
     
-    Joystick stick = new Joystick(1);
+    Joystick gamePad = new Joystick(0); 
     
     int state = 0;
 
@@ -177,7 +177,7 @@ public class Robot extends IterativeRobot {
     	        
     	    		System.out.println(distance);
     		    	
-    		    	if(stick.getRawButton(1)){
+    		    	if(gamePad.getRawButton(1)){
     		    		centerXs = table.getNumberArray("centerX", defaultValue);
     		    		centerX = centerXs[temp];
     		    		position = (centerX > 240);
