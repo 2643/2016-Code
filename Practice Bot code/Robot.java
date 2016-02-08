@@ -35,8 +35,8 @@ public class Robot extends IterativeRobot
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
     static Talon backLeftMotor = new Talon(0);
-    static Jaguar intakeMotor = new Jaguar(4);
-    static Jaguar shooterMotor = new Jaguar(5);
+    static Jaguar intakeMotor = new Jaguar(7);
+    static Jaguar shooterMotor = new Jaguar(8);
     
     //joystick
     Joystick stick = new Joystick(0);
