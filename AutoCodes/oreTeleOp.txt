@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
     Talon climberMotor = new Talon(0);
     Talon shooterMotor = new Talon(5);
     Joystick gamePad = new Joystick(0);
-    Joystick gamePad2(shooterControl) = new Joystick(1);
+    Joystick gamePad2 = new Joystick(1);
 
 
     RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
