@@ -35,9 +35,9 @@ public class Robot extends IterativeRobot {
     Talon backRightMotor = new Talon(1);
     Talon frontLeftMotor = new Talon(2);
     Talon backLeftMotor = new Talon(0);
-    Talon intakeMotor = new Talon(4);
+    Talon intakeMotor = new Talon(7);
     Talon climberMotor = new Talon(0);
-    Talon shooterMotor = new Talon(5);
+    Talon shooterMotor = new Talon(8);
     Joystick gamePad = new Joystick(0);
     Joystick gamePad2 = new Joystick(1);
 
