@@ -12,7 +12,7 @@ Encoder rightDriveEncoder = new Encoder (2,3);
 double highHeightBoundary = 80;
 double lowHeightBoundary = 20;
 
-if(clock.get > 130 && stick.getRawButton(9))
+if(clock.get > 130 && gamePad.getRawButton(9))
 {
         int state = 0;
         while(state < 3)
