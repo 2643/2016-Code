@@ -31,10 +31,10 @@ public class Robot extends IterativeRobot
     Image frame;
     
     //motors
-    static Talon frMotor = new Talon(1);
-    static Talon brMotor = new Talon(0);
-    static Talon flMotor = new Talon(2);
-    static Talon blMotor = new Talon(3);
+    static Talon frontRightMotor = new Talon(3);
+    static Talon backRightMotor = new Talon(1);
+    static Talon frontLeftMotor = new Talon(2);
+    static Talon backLeftMotor = new Talon(0);
     static Jaguar intakeMotor = new Jaguar(4);
     static Jaguar shooterMotor = new Jaguar(5);
     
@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot
     static Joystick gamePad = new Joystick (2);
     
     //arcade
-    static RobotDrive arcade = new RobotDrive(flMotor, blMotor, frMotor, brMotor);
+    static RobotDrive arcade = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -145,10 +145,10 @@ public class Robot extends IterativeRobot
     		
     		if(isPressed)
     		{
-    			frMotor.set(gamePad.getRawAxis(3)/-2);
-            	flMotor.set(gamePad.getY()/2);
-            	frMotor.set(gamePad.getRawAxis(3)/-2);
-            	blMotor.set(gamePad.getY()/2);
+    			frontRightMotor.set(gamePad.getRawAxis(3)/-2);
+            	frontLeftMotor.set(gamePad.getY()/2);
+            	frontRightMotor.set(gamePad.getRawAxis(3)/-2);
+            	backLeftMotor.set(gamePad.getY()/2);
     		}
     		else
     		{
