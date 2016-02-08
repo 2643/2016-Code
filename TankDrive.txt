@@ -20,8 +20,8 @@ public class Robot extends IterativeRobot {
 	Joystick leftStick = new Joystick(0);
 	Joystick rightStick = new Joystick(1);
 	
-	double leftPosition = leftStick.getY();
-	double rightPosition = rightStick.getRawAxis(3);
+	double gamePad = leftStick.getY();
+	double gmaePad1 = rightStick.getRawAxis(3);
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
