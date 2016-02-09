@@ -1,0 +1,247 @@
+
+package org.usfirst.frc.team2643.robot;
+
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+	
+	public static int frontRightMotorPWM = 3;
+	public static int backLeftMotorPWM = 0;
+	
+	
+	
+    final String defaultAuto = "Default";
+    final String customAuto = "My Auto";
+    String autoSelected;
+    SendableChooser chooser;
+    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
+    int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
+    int state = 0;
+    int porticulus = 0;
+    int sallyPort = 0;
+    int drawBridge = 0;
+    int arcadeDriveDrawbridge = 3;
+    int arcadeDrivePorticulus = 4;
+    int arcadeDriveSallyPort = 4;
+    
+    static double turn90Amount = 0;
+    static double distanceBetweenDefenses = 0;
+    static double distanceToDefense = 0;
+    static double distanceToFinishDefense = 0;
+    static double distanceToPullDown = 0;
+    static double topOfLinearSlide = 0;
+    static double highHeightBoundary = 80;
+    static double lowHeightBoundary = 20;
+    double leftPosition = 0;
+    double rightPosition = 0;
+    double distanceTillUp = 0;
+    double distanceOverDefense = 0;
+    static Talon backLeftMotor = new Talon(backLeftMotorPWM);
+    static Talon backRightMotor = new Talon(1);
+    static Talon frontLeftMotor = new Talon(2);
+    static Talon frontRightMotor = new Talon( frontRightMotorPWM);
+    static Talon hookMotor = new Talon(4);
+    static Talon lsMotor = new Talon(5);
+    static Talon linearSlide2 = new Talon(5);
+    static Encoder leftDriveEncoder  = new Encoder(0,1);
+    static Encoder rightDriveEncoder = new Encoder(2,3);
+    static Encoder hookEncoder = new Encoder(4,5);
+    static Encoder slideEncoder = new Encoder(6,7);
+    static Joystick gamePad = new Joystick(0);
+    static Joystick gamePad2 = new Joystick(0);
+    static Timer clock = new Timer();
+    
+    DigitalInput slideBottomLimitSwitch = new DigitalInput(3);
+    
+   
+    
+    
+   
+    //Declaration of variables^
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+        SmartDashboard.putNumber("DB/Slider 0" , 0.0);
+        SmartDashboard.putNumber("DB/Slider 1" , 0.0);
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("My Auto", customAuto);
+        SmartDashboard.putData("Auto choices", chooser);
+    }
+    
+        /**
+         * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
+         * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
+         * Dashboard, remove all of the chooser code and uncomment the getString line to get the auto name from the text box
+         * below the Gyro
+         *
+         * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
+         * If using the SendableChooser make sure to add them to the chooser code above as well.
+         */
+    public void autonomousInit() {
+            autoSelected = (String) chooser.getSelected();
+//                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+                System.out.println("Auto selected: " + autoSelected);
+                hookEncoder.reset();
+                AutoMethods.turnMove(shiftStartingPosition);
+                AutoMethods.moveForward(distanceTillUp,1);
+                switch (barrierInfront){
+                case 1:
+                    AutoMethods.crossDrawbridge();
+                    break;
+                case 2:
+                    AutoMethods.crossPortcullis();
+                    break;
+                case 3:
+                    AutoMethods.crossChevalDeFrise();
+                    break;
+                case 4:
+                    AutoMethods.crossSallyPort();
+                    break;
+                case 5:
+                    AutoMethods.crossMoat(distanceOverDefense);
+                    break;
+                case 6:
+                    AutoMethods.crossRoughTerrain(distanceOverDefense);
+                    break;
+                case 7:
+                    AutoMethods.crossRamparts(distanceOverDefense);
+                    break;
+                case 8:
+                    AutoMethods.crossRockWall(distanceOverDefense);
+                    break;
+            }
+    }
+
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    
+    }
+
+
+    public void teleopInit() {
+    	clock.start();
+      }
+    
+    
+    public void teleopPeriodic() {
+    	tankDrive();
+    	
+
+    	if(clock.get() > 130 && gamePad.getRawButton(9))
+    	{
+    	        String state = "raiseHooks";
+    	        int stop = 0;
+    	        while(stop == 0)
+    	        {
+    	                switch(state)
+    	                {
+    	                        //raise hooks
+    	                        case "raiseHooks":
+    	                                //move slow as you near the top of the linear slide, if not close then go at normal speed
+    	                                if(slideEncoder.get() > highHeightBoundary - 30)
+    	                                {
+    	                                        //stop at the top, if not at the top go slow
+    	                                        if(slideEncoder.get() > highHeightBoundary)
+    	                                        {
+    	                                                lsMotor.set(0);
+    	                                                leftDriveEncoder.reset();
+    	                                                rightDriveEncoder.reset();
+    	                                                state = "moveForward";
+    	                                        }
+    	                                        else
+    	                                        {
+    	                                                lsMotor.set(.2);
+    	                                        }
+    	                                }
+    	                                else
+    	                                {
+    	                                        lsMotor.set(.5);
+    	                                }
+    	                        break;
+    	                        //move forward a bit
+    	                        case "moveForward":
+    	                                if(leftDriveEncoder.get() > 100 || rightDriveEncoder.get() < -100)
+    	                                {
+    	                                        backRightMotor.set(0);
+    	                                        frontRightMotor.set(0);
+    	                                        backLeftMotor.set(0);
+    	                                        frontLeftMotor.set(0);
+    	                                        state = "pullUp";
+    	                                }
+    	                                else
+    	                                {
+    	                                        backRightMotor.set(-.3);
+    	                                        frontRightMotor.set(-.3);
+    	                                        backLeftMotor.set(.3);
+    	                                        frontLeftMotor.set(.3);
+    	                                }
+    	                        break;
+    	                        //pull robot up
+    	                        case "pullUp":
+    	                                //as you near the bottom slow down
+    	                                if(slideEncoder.get() < lowHeightBoundary - 30)
+    	                                {
+    	                                        //stop at the bottom, if not at bottom then go slow
+    	                                        if(slideEncoder.get() < lowHeightBoundary)
+    	                                        {
+    	                                                lsMotor.set(0);
+    	                                                state = "pullUp";
+    	                                        }
+    	                                        else
+    	                                        {
+    	                                                lsMotor.set(-.2);
+    	                                        }
+    	                                }
+    	                                else
+    	                                {
+    	                                        lsMotor.set(-.5);
+    	                                }
+    	                        
+    	                      // case otherwise: 
+    	                    	   //stop = 1;
+    	                        	break;
+    	                }
+    	        }
+    	}
+    	
+    }
+    
+    public void tankDrive(){
+    	leftPosition = gamePad.getY();
+    	rightPosition = gamePad2.getRawAxis(3);
+    	backLeftMotor.set(leftPosition);
+        backRightMotor.set(rightPosition);
+        frontLeftMotor.set(leftPosition);
+        frontRightMotor.set(rightPosition); 
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    
+    }
+    
+}
+
+//add limit switch and encoder on the climber 
