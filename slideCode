@@ -1,44 +1,18 @@
 @@ -0,0 +1,143 @@
 package org.usfirst.frc.team2643.robot;
 
-
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team2643.robot.commands.ExampleCommand;
 import org.usfirst.frc.team2643.robot.subsystems.ExampleSubsystem;
 
-
-
-
-
-
-
         Talon linearSlide = new Talon(4);
-        
-        
         
         public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
         public static OI oi;
-
-
-        
-    
-   
-
-
-    
-
-    
                 oi = new OI();
-      
-        
 
-
-
-
-   
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         
@@ -55,10 +29,4 @@ import org.usfirst.frc.team2643.robot.subsystems.ExampleSubsystem;
                 linearSlide.set(0.0);
                 linearSlide2.set(0.0);
         }
-        
-        
-        
-        
-        
     }
-    
