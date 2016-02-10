@@ -50,11 +50,11 @@ public class Robot extends IterativeRobot {
     int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
     int state = 0;
-    int porticulus = 0;
+    int portcullis = 0;
     int sallyPort = 0;
     int drawBridge = 0;
-    int arcadeDriveDrawbridge = 3;
-    int arcadeDrivePorticulus = 4;
+    int arcadeDriveDrawBridge = 3;
+    int arcadeDrivePortcullis = 4;
     int arcadeDriveSallyPort = 4;
     
     static double turn90Amount = 0;
