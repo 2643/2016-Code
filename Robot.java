@@ -21,8 +21,27 @@ public class Robot extends IterativeRobot {
 	
 	public static int frontRightMotorPWM = 3;
 	public static int backLeftMotorPWM = 0;
+	public static int backRightMotorPWM = 1;
+	public static int frontLeftMotorPWM = 2;
+	public static int hookMotorPWM = 4;
+	public static int linearSlidePWM = 4;
+	public static int linearSlide2PWM = 5;
+	public static int gamePadPort= 0;
+	public static int gamePad2Port = 0;
+	public static int slideBottomLimitSwitchDI = 3;
+	public static int slideEncoderEN = 6 ;
+	public static int slideEncoderEN2 = 7;
+	public static int hookEncoderEN = 4;
+	public static int hookEncoderEN2 = 5;
+	public static int leftDriveEncoderEN = 0;
+	public static int leftDriveEncoderEN2 = 1;
+	public static int rightDriveEncoderEN = 2;
+	public static int rightDriveEncoderEN2 = 3;
+	 
 	
 	
+	
+
 	
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
@@ -31,11 +50,11 @@ public class Robot extends IterativeRobot {
     int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
     int state = 0;
-    int porticulus = 0;
+    int portcullis = 0;
     int sallyPort = 0;
     int drawBridge = 0;
-    int arcadeDriveDrawbridge = 3;
-    int arcadeDrivePorticulus = 4;
+    int arcadeDriveDrawBridge = 3;
+    int arcadeDrivePortcullis = 4;
     int arcadeDriveSallyPort = 4;
     
     static double turn90Amount = 0;
@@ -50,22 +69,24 @@ public class Robot extends IterativeRobot {
     double rightPosition = 0;
     double distanceTillUp = 0;
     double distanceOverDefense = 0;
+    
+    
     static Talon backLeftMotor = new Talon(backLeftMotorPWM);
-    static Talon backRightMotor = new Talon(1);
-    static Talon frontLeftMotor = new Talon(2);
+    static Talon backRightMotor = new Talon(backRightMotorPWM);
+    static Talon frontLeftMotor = new Talon(frontLeftMotorPWM);
     static Talon frontRightMotor = new Talon( frontRightMotorPWM);
-    static Talon hookMotor = new Talon(4);
-    static Talon lsMotor = new Talon(5);
-    static Talon linearSlide2 = new Talon(5);
-    static Encoder leftDriveEncoder  = new Encoder(0,1);
+    static Talon hookMotor = new Talon(hookMotorPWM);
+    static Talon linearSlide = new Talon(linearSlidePWM);
+    static Talon linearSlide2 = new Talon(linearSlide2PWM);
+    static Encoder leftDriveEncoder  = new Encoder(leftDriveEncoderEN,leftDriveEncoderEN2);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    static Encoder hookEncoder = new Encoder(4,5);
-    static Encoder slideEncoder = new Encoder(6,7);
-    static Joystick gamePad = new Joystick(0);
-    static Joystick gamePad2 = new Joystick(0);
+    static Encoder hookEncoder = new Encoder(hookEncoderEN,hookEncoderEN2);
+    static Encoder slideEncoder = new Encoder(slideEncoderEN,slideEncoderEN2);
+    static Joystick gamePad = new Joystick(gamePadPort);
+    static Joystick gamePad2 = new Joystick(gamePad2Port);
     static Timer clock = new Timer();
     
-    DigitalInput slideBottomLimitSwitch = new DigitalInput(3);
+    DigitalInput slideBottomLimitSwitch = new DigitalInput(slideBottomLimitSwitchDI);
     
    
     
@@ -163,19 +184,19 @@ public class Robot extends IterativeRobot {
     	                                        //stop at the top, if not at the top go slow
     	                                        if(slideEncoder.get() > highHeightBoundary)
     	                                        {
-    	                                                lsMotor.set(0);
+    	                                                linearSlide.set(0);
     	                                                leftDriveEncoder.reset();
     	                                                rightDriveEncoder.reset();
     	                                                state = "moveForward";
     	                                        }
     	                                        else
     	                                        {
-    	                                                lsMotor.set(.2);
+    	                                                linearSlide.set(.2);
     	                                        }
     	                                }
     	                                else
     	                                {
-    	                                        lsMotor.set(.5);
+    	                                        linearSlide.set(.5);
     	                                }
     	                        break;
     	                        //move forward a bit
@@ -204,17 +225,17 @@ public class Robot extends IterativeRobot {
     	                                        //stop at the bottom, if not at bottom then go slow
     	                                        if(slideEncoder.get() < lowHeightBoundary)
     	                                        {
-    	                                                lsMotor.set(0);
+    	                                                linearSlide.set(0);
     	                                                state = "pullUp";
     	                                        }
     	                                        else
     	                                        {
-    	                                                lsMotor.set(-.2);
+    	                                                linearSlide.set(-.2);
     	                                        }
     	                                }
     	                                else
     	                                {
-    	                                        lsMotor.set(-.5);
+    	                                        linearSlide.set(-.5);
     	                                }
     	                        
     	                      // case otherwise: 
