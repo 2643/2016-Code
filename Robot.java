@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	public static int linearSlidePWM = 4;
 	public static int linearSlide2PWM = 5;
 	public static int gamePadPort= 0;
-	public static int gamePad2Port = 0;
+	public static int gamePad2Port = 1;
 	public static int slideBottomLimitSwitchDI = 3;
 	public static int slideEncoderEN = 6 ;
 	public static int slideEncoderEN2 = 7;
