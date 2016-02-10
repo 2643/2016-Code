@@ -26,12 +26,10 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
         
-        Talon fRWheel = new Talon(4);
-        Talon fLWheel = new Talon(3);
-        Talon bRWheel = new Talon(5);
-        Talon bLWheel = new Talon(5);
-        //update later
-        
+        Talon frontRightMotor = new Talon(3);
+        Talon frontLeftMotor = new Talon(2);
+        Talon backRightMotor = new Talon(1);
+        Talon backLeftMotor = new Talon(0);
         Talon linearSlide = new Talon(3);
         Talon linearSlide2 = new Talon(4);
         Joystick stick = new Joystick(5);
@@ -39,6 +37,9 @@ public class Robot extends IterativeRobot {
         Encoder rightEncoder = new Encoder(3,4);//update later
         Encoder leftEncoder = new Encoder(2,4);// update later
         int state = 0;
+        Joystick driveStick = new Joystick (5);
+	    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	    public static OI oi;
                         
     /**
      * This function is run when the robot is first started up and should be
@@ -87,72 +88,110 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+     
+        double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMOtor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
+    	       
              
             if(stick.getRawButton(1)){
                     switch(state){
                     
-                    case 0:
+                    rightEncoder.reset();
+                    leftEncoder.reset();
                     
+                    case 0:
                     //Portibelli thing
-                 if(lsEncoder.get() <= 50){
+                 if(lsEncoder.get() <= 50)
+                 {
                          //Update later
-                         fRWheel.set(0.2);
-                             fLWheel.set(0.2);
-                             bRWheel.set(0.2);
-                             bLWheel.set(0.2);
+                             frontRightMotor.set(0.2);
+                             frontLeftWheelMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                             if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                          state = 1;
+                        }
+                         
                  }
+                 break;
                  else{
                          linearSlide.set(-0.5);
                          linearSlide2.set(-0.5);
                          if(lsEncoder.get() >= 50){
                                  linearSlide.set(0.0);
-                             linearSlide2.set(0.0);
-                             fRWheel.set(0.2);
-                                 fLWheel.set(0.2);
-                                 bRWheel.set(0.2);
-                                 bLWheel.set(0.2);
+                                 linearSlide2.set(0.0);
+                                 frontRightMotor.set(0.2);
+                                 frontLeftMotor.set(0.2);
+                                 backRightMotor.set(0.2);
+                                 backLeftMotor.set(0.2);
+                                 if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 //Update encoder later
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                                  state = 1;
+                                }
                          }
-                 }
+                 break;
                     
                     case 1:
-                            //goes up and then slowly moves down and then moves forward
+                            //linear slide goes up and then slowly moves down and then robo moves forward
+                            rightEncoder.reset();
+                            leftEncoder.reset();
                             
                             linearSlide.set(0.5);
                             linearSlide2.set(0.5);
                     if(lsEncoder.get() >= 200){
-                            //update later
+                            // encoder update later
                             linearSlide.set(0.0);
                             linearSlide2.set(0.0);
                             
-                            fRWheel.set(0.5);
-                             fLWheel.set(0.5);
-                             bRWheel.set(0.5);
-                             bLWheel.set(0.5);
+                             frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
                              state = 2;
+                            
+                             
                     }
-                    
                     break;
                     
+                    
+                    
                     case 2:
+                           
                             if(rightEncoder.get() >= 200 && leftEncoder.get() >= 200 ){
                                     linearSlide.set(-0.4);
                                     linearSlide2.set(-0.4);
                                     if(lsEncoder.get() <= 50){
                                             linearSlide.set(0.0);
-                                            linearSlide2.set(0.0);        
+                                            linearSlide2.set(0.0); 
+                                            state = 3;
+                                            }
                                     }                
-                    }
                     break;
                     case 3: 
-                            //goes back to normal code
                             
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMOtor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMortor.set(yPosition+xPosition);
         
                     }
-                            
-                    }
+                    
                     
                     
             
@@ -160,121 +199,148 @@ public class Robot extends IterativeRobot {
             if(stick.getRawButton(2)){
                     //sally port gotta move the machine like 90 degrees to turn the thing 
                     switch(state){
-                    
+                    rightEncoder.reset();
+                    leftEncoder.reset();
                     case 0:
                     if(lsEncoder.get() >= 200){
-                            //update later
+                            //encoder update later
                             state = 1;
                     }
                             else{
-                                    linearSlide.set(0.2);
+                                linearSlide.set(0.2);
                                 linearSlide2.set(0.2);
                                 if(lsEncoder.get() >= 200){
-                                        state = 1;
+                                        state = 2;
                                 }
-                            }
                     
                     break;
-                    
                     case 1:
+                             frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                        if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                        //encoder update later
+                             frontRightMotor.set(0.0);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             backLeftMotor.set(0.0);
+                             state = 2;
+                             }
+                             break;
+                    case 2:
+                    rightEncoder.reset();
                             linearSlide.set(-0.2);
-                        linearSlide2.set(-0.2);
+                            linearSlide2.set(-0.2);
                         //linear slides move down to hook the sally ports
-                    if(lsEncoder.get() >= 250){
-                            //update later
-                            linearSlide.set(0.0);
+                    if(lsEncoder.get() <= 150){
+                            //encoder update later
+                        linearSlide.set(0.0);
                         linearSlide2.set(0.0);
                         //linear slides stop to hook it
-                        
-                            fRWheel.set(-0.5);
-                             fLWheel.set(0.0);
-                             bRWheel.set(-0.5);
-                             bLWheel.set(0.0);
+                        }
+                           frontRightMotor.set(-0.5);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(-0.5);
+                             backLeftMotor.set(0.0);
 
 
                              //the right wheels move backwards to turn in a circle
-                             state = 2;
-                    }
+                             state = 3;
+                    
                     break;
                     
-                    case 2:
-                            if(rightEncoder.get() >= 304){
-                                    linearSlide.set(0.2);
-                                linearSlide2.set(0.2);
-                                //slide goes up to release the sally ports
-                                state = 3;
-                            }
-                            break;
                     case 3:
-                            if(lsEncoder.get() >= 200){
-                                    linearSlide.set(0.0);
-                                linearSlide2.set(0.0);
-                                //linear slide stops
+                            if(rightEncoder.get() >= -150){
+                            //encoder update later
+                             frontRightMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             
+                                  
                                 state = 4;
                             }
                             break;
                     case 4:
-                            //player controls
-                    
-                    
+                    	   double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
+                              
+                                state = 5;
+                            
+                            break;
+                 
             
-            }
-            }
             
             if(stick.getRawButton(3)){
                     //drawbridge gotta move the robot slide thing down and then have the robot move backwards
                     switch(state){
-                    
-                    
+                    rightEncoder.reset();
+                    leftEncoder.reset();
                     case 0:
                         if(lsEncoder.get() >= 200){
-                                //update later
+                                //encoder update later
                                 state = 1;
                         }
-                        else{
-                                        linearSlide.set(0.2);
-                                    linearSlide2.set(0.2);
+                        else
+                        {
+                             linearSlide.set(0.2);
+                             linearSlide2.set(0.2);
                 
-                                    if(lsEncoder.get() >= 200){
+                                if(lsEncoder.get() >= 200){
                                             state = 1;
-                                    }
+                        }
                         }
                                     break;
+                                    
+                                    
+                                    
                     
                     case 1:
                             //linear slide goes down 
                                     linearSlide.set(-0.2);
-                             linearSlide2.set(-0.2);
+                                    linearSlide2.set(-0.2);
                     //wheels moves backwards while the the linear slide goes down 
-                                    fRWheel.set(-0.2);
-                                 fLWheel.set(-0.2);
-                                 bRWheel.set(-0.2);
-                                 bLWheel.set(-0.2);
+                                    frontRightMotor.set(-0.2);
+                                 frontLeftMotor.set(-0.2);
+                                 backRightMotor.set(-0.2);
+                                 backLeftMotor.set(-0.2);
                                  if(lsEncoder.get() <= 50 && rightEncoder.get() >= 300 && leftEncoder.get() >= 300){
                                  //update later
                                  linearSlide.set(0.0);
                                  linearSlide2.set(0.0);
                                  
-                                 fRWheel.set(0.0);
-                             fLWheel.set(0.0);
-                             bRWheel.set(0.0);
-                             bLWheel.set(0.0);
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
                              state = 2;
                                  }
                                  break;
+                                 
                     case 2:
                             //the linear slide still stays down and the wheels move forward
-                            fRWheel.set(0.2);
-                             fLWheel.set(0.2);
-                             bRWheel.set(0.2);
-                             bLWheel.set(0.2);
+                            frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
                              if(rightEncoder.get() >= 120 && leftEncoder.get() >= 120){
-                                     //update later 
+                                     //encoder update later 
                                      state = 3;
                              }
                     break;
+                    
                     case 3:
-                            //player control
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
                     break;
                     }
             }        

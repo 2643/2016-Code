@@ -31,21 +31,21 @@ public static void moveForward(double distanceTillUp,double speed){
 
         public static void crossPortcullis() {
                 moveHooksDown();
-                moveForward(distanceToDefense,.4);
+                moveForward(distanceToDefense,0.4);
                 moveHooksUp();
-                moveForward(distanceToFinishDefense,.4);
+                moveForward(distanceToFinishDefense,0.4);
         }
 
 
         public static void crossChevalDeFrise() {
-                moveForward(distanceToDefense,.4);
+                moveForward(distanceToDefense,0.4);
                 moveHooksDown();
-                moveForward(distanceToFinishDefense,.4);
+                moveForward(distanceToFinishDefense,0.4);
         }
 
 
         public static void moveHooksDown() {
-                while(leftBottomSwitch.get() && leftBottomSwitch.get()){
+                while(leftHookEncoder > 0 && rightHookEncoder > 0){
                 rightHookMotor.set(-1);
                 leftHookMotor.set(-1);
                 }
@@ -54,7 +54,7 @@ public static void moveForward(double distanceTillUp,double speed){
         }
         
         public static void moveHooksUp() {
-                while(leftTopSwitch.get() && leftTopSwitch.get()){
+                while(leftHookEncoder <  topOfLinearSlide && rightHookEncoder < topOfLinearSlide){
                 rightHookMotor.set(1);
                 leftHookMotor.set(1);
                 }
@@ -69,22 +69,22 @@ public static void moveForward(double distanceTillUp,double speed){
 
 
         public static void crossMoat(double distanceOverObject) {
-                moveForward(distanceOverObject,.5);
+                moveForward(distanceOverObject,0.7);
         }
 
 
         public static void crossRoughTerrain(double distanceOverObject) {
-                moveForward(distanceOverObject,.7);
+                moveForward(distanceOverObject,0.7);
         }
 
 
         public static void crossRamparts(double distanceOverObject) {
-                moveForward(distanceOverObject,.6);
+                moveForward(distanceOverObject,0.6);
         }
 
 
         public static void crossRockWall(double distanceOverObject) {
-                moveForward(distanceOverObject,.3);
+                moveForward(distanceOverObject,0.2);
         }
 
 
@@ -100,7 +100,7 @@ public static void moveForward(double distanceTillUp,double speed){
                 }
         }
 
-
+ 
         public static void turnRight() {
                 rightDriveEncoder.reset();
                 leftDriveEncoder.reset();

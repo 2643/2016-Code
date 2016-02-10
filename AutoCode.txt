@@ -26,6 +26,7 @@ public class Robot extends IterativeRobot {
     static double distanceToDefense = 0;
     static double distanceToFinishDefense = 0;
     static double distanceToPullDown = 0;
+    static double topOfLinearSlide = 0;
     double distanceTillUp = 0;
     double distanceOverDefense = 0;
     static Talon backLeftMotor = new Talon(0);
@@ -38,10 +39,6 @@ public class Robot extends IterativeRobot {
     static Encoder rightDriveEncoder = new Encoder(2,3);
     static Encoder leftHookEncoder = new Encoder(4,5);
     static Encoder rightHookEncoder = new Encoder(6,7);
-    static DigitalInput leftBottomSwitch = new DigitalInput(0); 
-    static DigitalInput rightBottomSwitch = new DigitalInput(1);
-    static DigitalInput leftTopSwitch = new DigitalInput(2);
-    static DigitalInput rightTopSwitch = new DigitalInput(3);
     //Declaration of variables^
     /**
      * This function is run when the robot is first started up and should be
@@ -69,14 +66,9 @@ public class Robot extends IterativeRobot {
             autoSelected = (String) chooser.getSelected();
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
-    }
-
-
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-            AutoMethods.turnMove(shiftStartingPosition);
+                leftHookEncoder.reset();
+                rightHookEncoder.reset();
+                AutoMethods.turnMove(shiftStartingPosition);
             AutoMethods.moveUp(distanceTillUp,1);
             if(barrierInfront == 1){
                     AutoMethods.crossDrawbridge();
@@ -94,9 +86,15 @@ public class Robot extends IterativeRobot {
                     AutoMethods.crossRamparts(distanceOverDefense);
             }else if(barrierInfront == 8){
                     AutoMethods.crossRockWall(distanceOverDefense);
-            }else{
-                    
             }
+    }
+
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    
     }
 
 
