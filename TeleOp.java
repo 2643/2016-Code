@@ -93,6 +93,15 @@ public class TeleOp {
         frontLeftMotor.set(leftPosition);
         frontRightMotor.set(rightPosition); 
     }
+     public void arcadedrive() {
+    	   double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMotor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
+}
     
     /**
      * This function is called periodically during test mode
