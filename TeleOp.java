@@ -3,7 +3,19 @@ package org.usfirst.frc.team2643.robot;
 public class TeleOp {
   
   tankDrive();
+  
+    	int solenoid1PCM = 1;
+    	int solenoid2PCM = 2;
+    	boolean solenoid1State = solenoid1.get();
+    	boolean solenoid2State = solenoid2.get();
     	
+    	
+   
+         
+         if(gamePad.getRawButton(2)){
+        	 
+        	 solenoid1.set(!solenoid1State);
+        	 solenoid2.set(!solenoid2State);
   
     	if(clock.get() > 130 && gamePad.getRawButton(9))
     	{
