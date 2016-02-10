@@ -1,0 +1,34 @@
+ int solenoid1PCM = 1;
+	int solenoid2PCM = 2;
+	Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
+    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
+    Joystick gamePad = new Joystick(1);
+    
+    
+    public void teleopPeriodic() {
+    	
+    	
+    	int solenoid1PCM = 1;
+    	int solenoid2PCM = 2;
+    	boolean solenoid1State = solenoid1.get();
+    	boolean solenoid2State = solenoid2.get();
+    	
+    	
+   
+         
+         if(gamePad.getRawButton(2)){
+        	 
+        	 solenoid1.set(!solenoid1State);
+        	 solenoid2.set(!solenoid2State);
+        	 
+        	 
+        	 
+        	 
+        	
+        	
+         }
+    	
+    	
+        
+    }
+    
