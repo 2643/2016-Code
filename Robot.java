@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	
-
+	boolean isTankDrive = false
 	
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
