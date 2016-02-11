@@ -24,11 +24,13 @@ public class TeleOp {
         frontLeftMotor.set(leftPosition);
         frontRightMotor.set(rightPosition); 
     }
+  public void Toggle(){
   if(gamePad.getRawButton(0)){ //update button numbers
    arcadeDrive = true
   }
   else if(gamePad.getRawButton(0)){ //update button numbers
     tankDrive = true
+  }
   }
   
     	int solenoid1PCM = 1;
