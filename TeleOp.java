@@ -5,6 +5,31 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class TeleOp {
   
   tankDrive();
+    boolean arcadeDrive
+    boolean tankDrive
+  public void arcadedrive() {
+    	   double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMotor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
+}
+  public void tankDrive(){
+    	leftPosition = gamePad.getY();
+    	rightPosition = gamePad2.getRawAxis(3);
+    	backLeftMotor.set(leftPosition);
+        backRightMotor.set(rightPosition);
+        frontLeftMotor.set(leftPosition);
+        frontRightMotor.set(rightPosition); 
+    }
+  if(gamePad.getRawButton(0)){ //update button numbers
+   arcadeDrive
+  }
+  else if(gamePad.getRawButton(0)){ //update button numbers
+    tankDrive
+  }
   
     	int solenoid1PCM = 1;
     	int solenoid2PCM = 2;
