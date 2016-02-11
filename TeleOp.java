@@ -4,48 +4,37 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class TeleOp {
   
-  tankDrive();
-    boolean arcadeDrive = false
-    boolean tankDrive = false
-  public void arcadedrive() {
-    	   double yPosition = driveStick.getY();
-    	   double xPosition = driveStick.getX();
-    	    
-    	    frontRightMotor.set(yPosition-xPosition);
-    	    backRightMotor.set(yPosition-xPosition);
-    	    frontLeftMotor.set(yPosition+xPosition);
-    	    backLeftMotor.set(yPosition+xPosition);
-}
-  public void tankDrive(){
-    	leftPosition = gamePad.getY();
-    	rightPosition = gamePad2.getRawAxis(3);
-    	backLeftMotor.set(leftPosition);
-        backRightMotor.set(rightPosition);
-        frontLeftMotor.set(leftPosition);
-        frontRightMotor.set(rightPosition); 
-    }
-  public void Toggle(){
+    // add "boolean tankDrive = false" in final
+  public void Drive(){
   if(gamePad.getRawButton(9)){ //update button numbers
-   arcadeDrive = true
+   tankDrive = false;
   }
   else if(gamePad.getRawButton(10)){ //update button numbers
-    tankDrive = true
+    tankDrive = true;
   }
   }
+  if(tankDrive){
+    tankDrive();
+  }else{
+    arcadeDrive();
+  }
+}
   
-    	int solenoid1PCM = 1;
+    	/*int solenoid1PCM = 1;
     	int solenoid2PCM = 2;
     	boolean solenoid1State = solenoid1.get();
     	boolean solenoid2State = solenoid2.get();
+    	Add these in final
+    	*/
     	
     	
    
-         
+         //put into a method
          if(gamePad.getRawButton(2)){
         	 
         	 solenoid1.set(!solenoid1State);
         	 solenoid2.set(!solenoid2State);
-  
+  public static void climb(){
     	if(clock.get() > 130 && gamePad.getRawButton(9))
     	{
     	        String state = "raiseHooks";
@@ -134,7 +123,7 @@ public class TeleOp {
         frontLeftMotor.set(leftPosition);
         frontRightMotor.set(rightPosition); 
     }
-     public void arcadedrive() {
+     public void arcadeDrive() {
     	   double yPosition = driveStick.getY();
     	   double xPosition = driveStick.getX();
     	    
