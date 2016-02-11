@@ -25,10 +25,10 @@ public class TeleOp {
         frontRightMotor.set(rightPosition); 
     }
   public void Toggle(){
-  if(gamePad.getRawButton(0)){ //update button numbers
+  if(gamePad.getRawButton(9)){ //update button numbers
    arcadeDrive = true
   }
-  else if(gamePad.getRawButton(0)){ //update button numbers
+  else if(gamePad.getRawButton(10)){ //update button numbers
     tankDrive = true
   }
   }
