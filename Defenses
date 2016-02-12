@@ -1,0 +1,361 @@
+@@ -0,0 +1,288 @@
+
+
+package org.usfirst.frc.team2643.robot;
+
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+    final String defaultAuto = "Default";
+    final String customAuto = "My Auto";
+    String autoSelected;
+    SendableChooser chooser;
+        
+        Talon frontRightMotor = new Talon(3);
+        Talon frontLeftMotor = new Talon(2);
+        Talon backRightMotor = new Talon(1);
+        Talon backLeftMotor = new Talon(0);
+        Talon linearSlide = new Talon(3);
+        Talon linearSlide2 = new Talon(4);
+        Joystick stick = new Joystick(5);
+        Encoder lsEncoder = new Encoder(9,0);//update later
+        Encoder rightEncoder = new Encoder(3,4);//update later
+        Encoder leftEncoder = new Encoder(2,4);// update later
+        int state = 0;
+        Joystick driveStick = new Joystick (5);
+	    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	    public static OI oi;
+                        
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("My Auto", customAuto);
+        SmartDashboard.putData("Auto choices", chooser);
+    }
+    
+        /**
+         * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
+         * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
+         * Dashboard, remove all of the chooser code and uncomment the getString line to get the auto name from the text box
+         * below the Gyro
+         *
+         * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
+         * If using the SendableChooser make sure to add them to the chooser code above as well.
+         */
+    public void autonomousInit() {
+            autoSelected = (String) chooser.getSelected();
+//                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+                System.out.println("Auto selected: " + autoSelected);
+    }
+
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+            switch(autoSelected) {
+            case customAuto:
+        //Put custom auto code here   
+            break;
+            case defaultAuto:
+            default:
+            //Put default auto code here
+            break;
+            }
+    }
+
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+     
+        double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMOtor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
+    	       
+             
+            if(stick.getRawButton(1)){
+                    switch(state){
+                    
+                    rightEncoder.reset();
+                    leftEncoder.reset();
+                    
+                    case 0:
+                    //Portibelli thing
+                 if(lsEncoder.get() <= 50)
+                 {
+                         //Update later
+                             frontRightMotor.set(0.2);
+                             frontLeftWheelMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                             if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
+                         state = 1;
+                        }
+                         
+                 }
+                 break;
+                 else{
+                         linearSlide.set(-0.5);
+                         linearSlide2.set(-0.5);
+                         if(lsEncoder.get() >= 50){
+                                 linearSlide.set(0.0);
+                                 linearSlide2.set(0.0);
+                                 frontRightMotor.set(0.2);
+                                 frontLeftMotor.set(0.2);
+                                 backRightMotor.set(0.2);
+                                 backLeftMotor.set(0.2);
+                                 if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                                 //Update encoder later
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
+                                 state = 1;
+                                }
+                         }
+                 break;
+                    
+                    case 1:
+                            //linear slide goes up and then slowly moves down and then robo moves forward
+                            rightEncoder.reset();
+                            leftEncoder.reset();
+                            
+                            linearSlide.set(0.5);
+                            linearSlide2.set(0.5);
+                    if(lsEncoder.get() >= 200){
+                            // encoder update later
+                            linearSlide.set(0.0);
+                            linearSlide2.set(0.0);
+                            
+                             frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                             state = 2;
+                            
+                             
+                    }
+                    break;
+                    
+                    
+                    
+                    case 2:
+                           
+                            if(rightEncoder.get() >= 200 && leftEncoder.get() >= 200 ){
+                                    linearSlide.set(-0.4);
+                                    linearSlide2.set(-0.4);
+                                    if(lsEncoder.get() <= 50){
+                                            linearSlide.set(0.0);
+                                            linearSlide2.set(0.0); 
+                                            state = 3;
+                                            }
+                                    }                
+                    break;
+                    case 3: 
+                            
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMOtor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMortor.set(yPosition+xPosition);
+        
+                    }
+                    
+                    
+                    
+            
+            
+            if(stick.getRawButton(2)){
+                    //sally port gotta move the machine like 90 degrees to turn the thing 
+                    switch(state){
+                    rightEncoder.reset();
+                    leftEncoder.reset();
+                    case 0:
+                    if(lsEncoder.get() >= 200){
+                            //encoder update later
+                            state = 1;
+                    }
+                            else{
+                                linearSlide.set(0.2);
+                                linearSlide2.set(0.2);
+                                if(lsEncoder.get() >= 200){
+                                        state = 2;
+                                }
+                    
+                    break;
+                    case 1:
+                             frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                        if(rightEncoder.get() >= 400 && leftEncoder.get() >= 400){
+                        //encoder update later
+                             frontRightMotor.set(0.0);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             backLeftMotor.set(0.0);
+                             state = 2;
+                             }
+                             break;
+                    case 2:
+                    rightEncoder.reset();
+                            linearSlide.set(-0.2);
+                            linearSlide2.set(-0.2);
+                        //linear slides move down to hook the sally ports
+                    if(lsEncoder.get() <= 150){
+                            //encoder update later
+                        linearSlide.set(0.0);
+                        linearSlide2.set(0.0);
+                        //linear slides stop to hook it
+                        }
+                           frontRightMotor.set(-0.5);
+                             frontLeftMotor.set(0.0);
+                             backRightMotor.set(-0.5);
+                             backLeftMotor.set(0.0);
+
+
+                             //the right wheels move backwards to turn in a circle
+                             state = 3;
+                    
+                    break;
+                    
+                    case 3:
+                            if(rightEncoder.get() >= -150){
+                            //encoder update later
+                             frontRightMotor.set(0.0);
+                             backRightMotor.set(0.0);
+                             
+                                  
+                                state = 4;
+                            }
+                            break;
+                    case 4:
+                    	   double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
+                              
+                                state = 5;
+                            
+                            break;
+                 
+            
+            
+            if(stick.getRawButton(3)){
+                    //drawbridge gotta move the robot slide thing down and then have the robot move backwards
+                    switch(state){
+                    rightEncoder.reset();
+                    leftEncoder.reset();
+                    case 0:
+                        if(lsEncoder.get() >= 200){
+                                //encoder update later
+                                state = 1;
+                        }
+                        else
+                        {
+                             linearSlide.set(0.2);
+                             linearSlide2.set(0.2);
+                
+                                if(lsEncoder.get() >= 200){
+                                            state = 1;
+                        }
+                        }
+                                    break;
+                                    
+                                    
+                                    
+                    
+                    case 1:
+                            //linear slide goes down 
+                                    linearSlide.set(-0.2);
+                                    linearSlide2.set(-0.2);
+                    //wheels moves backwards while the the linear slide goes down 
+                                    frontRightMotor.set(-0.2);
+                                 frontLeftMotor.set(-0.2);
+                                 backRightMotor.set(-0.2);
+                                 backLeftMotor.set(-0.2);
+                                 if(lsEncoder.get() <= 50 && rightEncoder.get() >= 300 && leftEncoder.get() >= 300){
+                                 //update later
+                                 linearSlide.set(0.0);
+                                 linearSlide2.set(0.0);
+                                 
+                                 frontRightMotor.set(0.0);
+                                 frontLeftMotor.set(0.0);
+                                 backRightMotor.set(0.0);
+                                 backLeftMotor.set(0.0);
+                             state = 2;
+                                 }
+                                 break;
+                                 
+                    case 2:
+                            //the linear slide still stays down and the wheels move forward
+                            frontRightMotor.set(0.2);
+                             frontLeftMotor.set(0.2);
+                             backRightMotor.set(0.2);
+                             backLeftMotor.set(0.2);
+                             if(rightEncoder.get() >= 120 && leftEncoder.get() >= 120){
+                                     //encoder update later 
+                                     state = 3;
+                             }
+                    break;
+                    
+                    case 3:
+                           double yPosition = driveStick.getY();
+    	                   double xPosition = driveStick.getX();
+    	    
+    	                   frontRightMotor.set(yPosition-xPosition);
+    	                   backRightMotor.set(yPosition-xPosition);
+    	                   frontLeftMotor.set(yPosition+xPosition);
+    	                   backLeftMotor.set(yPosition+xPosition);
+                    break;
+                    }
+            }        
+            }
+            
+            
+            
+            
+       
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    
+    }
+    
+}
