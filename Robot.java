@@ -45,11 +45,11 @@ public class Robot extends IterativeRobot {
     
     
     static Talon backLeftMotor = new Talon(0);
-    static Talon backRightMotor = new Talon(0);
-    static Talon frontLeftMotor = new Talon(0);
-    static Talon frontRightMotor = new Talon(0);
-    static Victor shooterMotor = new Victor(0);
-    static Victor intakeMotor = new Victor(0);
+    static Talon backRightMotor = new Talon(1);
+    static Talon frontLeftMotor = new Talon(2);
+    static Talon frontRightMotor = new Talon(3);
+    static Victor shooterMotor = new Victor(4);
+    static Victor intakeMotor = new Victor(5);
     static Victor climbMotor1 = new Victor(0);
     static Victor climbMotor2 = new Victor(0);
     static Victor climbMotor3 = new Victor(0);
