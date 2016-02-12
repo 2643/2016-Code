@@ -4,10 +4,8 @@ package org.usfirst.frc.team2643.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
-
-
 public class AutoMethods extends Robot{
-        
+    
 public static void moveForward(double distanceTillUp,double speed){
                 rightDriveEncoder.reset();
                 leftDriveEncoder.reset();
@@ -23,47 +21,10 @@ public static void moveForward(double distanceTillUp,double speed){
                 backRightMotor.set(0);
         }
 
-
-        public static void crossDrawbridge() {
-                
-        }
-
-
-        public static void crossPortcullis() {
-                moveHooksDown();
-                moveForward(distanceToDefense,0.4);
-                moveHooksUp();
-                moveForward(distanceToFinishDefense,0.4);
-        }
-
-
         public static void crossChevalDeFrise() {
-                moveForward(distanceToDefense,0.4);
-                moveHooksDown();
-                moveForward(distanceToFinishDefense,0.4);
-        }
-
-
-        public static void moveHooksDown() {
-                while(hookEncoder.get() > 0){
-                hookMotor.set(-1);
-                }
-                hookMotor.set(0);
+                //code
         }
         
-        public static void moveHooksUp() {
-                while(hookEncoder.get() <  topOfLinearSlide){
-                hookMotor.set(1);
-                }
-                hookMotor.set(0);
-        }
-
-
-        public static void crossSallyPort() {
-                
-        }
-
-
         public static void crossMoat(double distanceOverObject) {
                 moveForward(distanceOverObject,0.7);
         }
