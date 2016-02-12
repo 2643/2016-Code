@@ -23,9 +23,6 @@ public class Robot extends IterativeRobot {
 	public static int backLeftMotorPWM = 0;
 	public static int backRightMotorPWM = 1;
 	public static int frontLeftMotorPWM = 2;
-	public static int hookMotorPWM = 4;
-	public static int linearSlidePWM = 4;
-	public static int linearSlide2PWM = 5;
 	public static int gamePadPort= 0;
 	public static int gamePad2Port = 1;
 	public static int slideBottomLimitSwitchDI = 3;
@@ -38,8 +35,6 @@ public class Robot extends IterativeRobot {
 	public static int rightDriveEncoderEN = 2;
 	public static int rightDriveEncoderEN2 = 3;
 	 
-	
-	
 	
 	boolean isTankDrive = false
 	
@@ -74,10 +69,13 @@ public class Robot extends IterativeRobot {
     static Talon backLeftMotor = new Talon(backLeftMotorPWM);
     static Talon backRightMotor = new Talon(backRightMotorPWM);
     static Talon frontLeftMotor = new Talon(frontLeftMotorPWM);
-    static Talon frontRightMotor = new Talon( frontRightMotorPWM);
-    static Talon hookMotor = new Talon(hookMotorPWM);
-    static Talon linearSlide = new Talon(linearSlidePWM);
-    static Talon linearSlide2 = new Talon(linearSlide2PWM);
+    static Talon frontRightMotor = new Talon(frontRightMotorPWM);
+    static Victor shooter = new Victor();
+    static Victor intake = new Victor();
+    static Victor pivotArm = new Victor();
+    static Victor winch1 = new Victor();
+    static Victor winch2 = new Victor();
+    static Victor winch3 = new Victot();
     static Encoder leftDriveEncoder  = new Encoder(leftDriveEncoderEN,leftDriveEncoderEN2);
     static Encoder rightDriveEncoder = new Encoder(2,3);
     static Encoder hookEncoder = new Encoder(hookEncoderEN,hookEncoderEN2);
