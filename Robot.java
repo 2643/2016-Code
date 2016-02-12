@@ -1,15 +1,17 @@
 
 package org.usfirst.frc.team2643.robot;
 
-
+import java.lang.Math;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Solenoid;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -19,72 +21,47 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	public static int frontRightMotorPWM = 3;
-	public static int backLeftMotorPWM = 0;
-	public static int backRightMotorPWM = 1;
-	public static int frontLeftMotorPWM = 2;
-	public static int gamePadPort= 0;
-	public static int gamePad2Port = 1;
-	public static int slideBottomLimitSwitchDI = 3;
-	public static int slideEncoderEN = 6 ;
-	public static int slideEncoderEN2 = 7;
-	public static int hookEncoderEN = 4;
-	public static int hookEncoderEN2 = 5;
-	public static int leftDriveEncoderEN = 0;
-	public static int leftDriveEncoderEN2 = 1;
-	public static int rightDriveEncoderEN = 2;
-	public static int rightDriveEncoderEN2 = 3;
-	 
-	
-	boolean isTankDrive = false
-	
+
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
-    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
+    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0));    
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
-    int state = 0;
-    int portcullis = 0;
-    int sallyPort = 0;
-    int drawBridge = 0;
-    int arcadeDriveDrawBridge = 3;
-    int arcadeDrivePortcullis = 4;
-    int arcadeDriveSallyPort = 4;
     
+	static boolean isTankDrive = false;
     static double turn90Amount = 0;
     static double distanceBetweenDefenses = 0;
     static double distanceToDefense = 0;
     static double distanceToFinishDefense = 0;
-    static double distanceToPullDown = 0;
-    static double topOfLinearSlide = 0;
-    static double highHeightBoundary = 80;
-    static double lowHeightBoundary = 20;
-    double leftPosition = 0;
-    double rightPosition = 0;
+    static double leftPosition = 0;
+    static double rightPosition = 0;
     double distanceTillUp = 0;
     double distanceOverDefense = 0;
+    final double DISTANCE_POWER_CONSTANT = 0;
+    double currentRPS = 0;
+    double currentPower = 0;
+    double distance = 1;
     
     
-    static Talon backLeftMotor = new Talon(backLeftMotorPWM);
-    static Talon backRightMotor = new Talon(backRightMotorPWM);
-    static Talon frontLeftMotor = new Talon(frontLeftMotorPWM);
-    static Talon frontRightMotor = new Talon(frontRightMotorPWM);
-    static Victor shooter = new Victor();
-    static Victor intake = new Victor();
-    static Victor pivotArm = new Victor();
-    static Victor winch1 = new Victor();
-    static Victor winch2 = new Victor();
-    static Victor winch3 = new Victot();
-    static Encoder leftDriveEncoder  = new Encoder(leftDriveEncoderEN,leftDriveEncoderEN2);
+    static Talon backLeftMotor = new Talon(0);
+    static Talon backRightMotor = new Talon(0);
+    static Talon frontLeftMotor = new Talon(0);
+    static Talon frontRightMotor = new Talon(0);
+    static Victor shooterMotor = new Victor(0);
+    static Victor intakeMotor = new Victor(0);
+    static Victor climbMotor1 = new Victor(0);
+    static Victor climbMotor2 = new Victor(0);
+    static Victor climbMotor3 = new Victor(0);
+    static Victor climbArmMotor = new Victor(0);
+    static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    static Encoder hookEncoder = new Encoder(hookEncoderEN,hookEncoderEN2);
-    static Encoder slideEncoder = new Encoder(slideEncoderEN,slideEncoderEN2);
-    static Joystick gamePad = new Joystick(gamePadPort);
-    static Joystick gamePad2 = new Joystick(gamePad2Port);
+    static Encoder shooterEncoder = new Encoder(4,5);
+    static Joystick gamePad = new Joystick(0);
+    static Joystick gamePad2 = new Joystick(1);
     static Timer clock = new Timer();
     
-    DigitalInput slideBottomLimitSwitch = new DigitalInput(slideBottomLimitSwitchDI);
+    DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
    
     
@@ -117,32 +94,22 @@ public class Robot extends IterativeRobot {
             autoSelected = (String) chooser.getSelected();
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
-                hookEncoder.reset();
                 AutoMethods.turnMove(shiftStartingPosition);
                 AutoMethods.moveForward(distanceTillUp,1);
                 switch (barrierInfront){
                 case 1:
-                    AutoMethods.crossDrawbridge();
-                    break;
-                case 2:
-                    AutoMethods.crossPortcullis();
-                    break;
-                case 3:
                     AutoMethods.crossChevalDeFrise();
                     break;
-                case 4:
-                    AutoMethods.crossSallyPort();
-                    break;
-                case 5:
+                case 2:
                     AutoMethods.crossMoat(distanceOverDefense);
                     break;
-                case 6:
+                case 3:
                     AutoMethods.crossRoughTerrain(distanceOverDefense);
                     break;
-                case 7:
+                case 4:
                     AutoMethods.crossRamparts(distanceOverDefense);
                     break;
-                case 8:
+                case 5:
                     AutoMethods.crossRockWall(distanceOverDefense);
                     break;
             }
@@ -163,10 +130,22 @@ public class Robot extends IterativeRobot {
     
     
     public void teleopPeriodic() {
-       
-    	               
+    	//TeleOp.drive();
+    	//TeleOp.intake();
     }
     
+   
+    
+    //*calculate current RPS
+    
+    //ADD THIS BACK WHEN PID CONTROL IS DONE 
+
+    // {if(gamePad.getRawButton(0)){
+            //set distance to certain numbers for presets
+            //shooterMotor.set(pidControl(Math.sqrt(distance)*DISTANCE_POWER_CONSTANT,currentRPS,currentPower));
+            //leave as error until pidControl is done
+            
+
     /**
      * This function is called periodically during test mode
      */
