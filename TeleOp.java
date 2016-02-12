@@ -1,17 +1,15 @@
 package org.usfirst.frc.team2643.robot;
-import edu.wpi.first.wpilibj.Solenoid;
 
 
-public class TeleOp {
+public class TeleOp extends Robot{
   
     // add "boolean tankDrive = false" in final
-  public void Drive(){
-  if(gamePad.getRawButton(9)){ //update button numbers
+  public static void drive(){
+if(gamePad.getRawButton(9)){ //update button numbers
     isTankDrive = false;
   }
   else if(gamePad.getRawButton(10)){ //update button numbers
     isTankDrive = true;
-  }
   }
   if(isTankDrive){
     tankDrive();
@@ -31,10 +29,9 @@ public class TeleOp {
    
          //put into a method
          
-    	
-    }
+
     
-    public void tankDrive(){
+    public static void tankDrive(){
     	leftPosition = gamePad.getY();
     	rightPosition = gamePad2.getRawAxis(3);
     	backLeftMotor.set(leftPosition);
@@ -42,9 +39,9 @@ public class TeleOp {
         frontLeftMotor.set(leftPosition);
         frontRightMotor.set(rightPosition); 
     }
-     public void arcadeDrive() {
-    	   double yPosition = driveStick.getY();
-    	   double xPosition = driveStick.getX();
+     public static void arcadeDrive() {
+    	   double yPosition = gamePad.getY();
+    	   double xPosition = gamePad.getX();
     	    
     	    frontRightMotor.set(yPosition-xPosition);
     	    backRightMotor.set(yPosition-xPosition);
