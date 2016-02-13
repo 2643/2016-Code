@@ -17,7 +17,12 @@ if(gamePad.getRawButton(9)){ //update button numbers
     arcadeDrive();
   }
 }
-  
+  public static void solenoid(){
+    
+         if(gamePad.getRawButton(2)){
+        	 solenoid1.set(!solenoid1State);
+        	 solenoid2.set(!solenoid2State);
+  }
     	/*int solenoid1PCM = 1;
     	int solenoid2PCM = 2;
     	boolean solenoid1State = solenoid1.get();
