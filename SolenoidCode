@@ -8,8 +8,7 @@
     public void teleopPeriodic() {
     	
     	
-    	int solenoid1PCM = 1;
-    	int solenoid2PCM = 2;
+
     	boolean solenoid1State = solenoid1.get();
     	boolean solenoid2State = solenoid2.get();
     	
