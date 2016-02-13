@@ -1,9 +1,7 @@
 package org.usfirst.frc.team2643.robot;
 
-
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
+
 public class AutoMethods extends Robot{
     
 public static void moveForward(double distanceTillUp,double speed){
@@ -21,11 +19,32 @@ public static void moveForward(double distanceTillUp,double speed){
                 backRightMotor.set(0);
         }
 
-        public static void crossChevalDeFrise() {
-                //code
+        public static void crossChevalDeFrise(double distanceOverDefense) {
+        	leftDriveEncoder.reset();
+        	rightDriveEncoder.reset();
+        	int state = 0;
+        	
+        	switch(state){
+        	
+        	case 0 :
+        		piston.set(true);
+        		state = 1;
+        	break;
+        	
+        	case 1 :
+        		
+        		moveForward(distanceOverDefense, 0.5);
+        		if(leftDriveEncoder.get() >= 30 && rightDriveEncoder.get() >= 30 ){
+        			
+        		piston.set(false);
+        			
+                   }
+        		break;
+        	}
+        	
         }
-        
-        public static void crossMoat(double distanceOverObject) {
+
+		public static void crossMoat(double distanceOverObject) {
                 moveForward(distanceOverObject,0.7);
         }
 
