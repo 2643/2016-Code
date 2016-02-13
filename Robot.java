@@ -25,8 +25,7 @@ public class Robot extends IterativeRobot {
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
-    SendableChooser chooser;
-    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0));    
+    SendableChooser chooser;    
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
     
 	static boolean isTankDrive = false;
@@ -36,14 +35,17 @@ public class Robot extends IterativeRobot {
     static double distanceToFinishDefense = 0;
     static double leftPosition = 0;
     static double rightPosition = 0;
-    double distanceTillUp = 0;
-    double distanceOverDefense = 0;
+    double distanceUntillInfront = 0;
+    static double distanceOverDefense = 0;
+    String autoState = "moveForawrd";
     final double DISTANCE_POWER_CONSTANT = 0;
+    int turnMoveState = 0;
+    boolean finished = false;
     double currentRPS = 0;
     double currentPower = 0;
     double distance = 1;
     
-    
+    static Solenoid piston = new Solenoid(0);
     static Talon backLeftMotor = new Talon(0);
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
@@ -94,33 +96,49 @@ public class Robot extends IterativeRobot {
             autoSelected = (String) chooser.getSelected();
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
-                AutoMethods.turnMove(shiftStartingPosition);
-                AutoMethods.moveForward(distanceTillUp,1);
-                switch (barrierInfront){
-                case 1:
-                    AutoMethods.crossChevalDeFrise();
-                    break;
-                case 2:
-                    AutoMethods.crossMoat(distanceOverDefense);
-                    break;
-                case 3:
-                    AutoMethods.crossRoughTerrain(distanceOverDefense);
-                    break;
-                case 4:
-                    AutoMethods.crossRamparts(distanceOverDefense);
-                    break;
-                case 5:
-                    AutoMethods.crossRockWall(distanceOverDefense);
-                    break;
+                AutoMethods.resetEncoders();
             }
-    }
+   
 
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    
+    	switch(autoState){
+		case "turnMove":
+			turnMoveState = AutoMethods.turnMove(shiftStartingPosition,turnMoveState);
+			if(turnMoveState > 2){
+				autoState = "moveForward";
+				AutoMethods.resetEncoders();
+			}
+			break;
+		case "moveForward": 
+			if(AutoMethods.moveForward(distanceUntillInfront,1)){
+				autoState = "cross";
+				AutoMethods.resetEncoders();
+			}
+			break;
+		case "cross":
+			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
+             	finished = AutoMethods.crossChevalDeFrise();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 1){
+            	finished = AutoMethods.crossMoat();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 2){   
+            	finished = AutoMethods.crossRoughTerrain();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 3){
+            	finished = AutoMethods.crossRamparts();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 4){
+            	finished = AutoMethods.crossRockWall();
+           }
+		if(finished){
+			autoState = "finished";
+		}
+			break;
+		case "finished":
+			//whatever when its done
+			break;
+	}
     }
 
 
