@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;    
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
     
-	static boolean isTankDrive = false;
+    static boolean isTankDrive = false;
     static double turn90Amount = 0;
     static double distanceBetweenDefenses = 0;
     static double distanceToDefense = 0;
@@ -67,6 +67,8 @@ public class Robot extends IterativeRobot {
     int solenoid2PCM = 2;
     Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
     Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
+    static boolean solenoid1State = solenoid1.get();
+    static boolean solenoid2State = solenoid2.get();
     
     DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
