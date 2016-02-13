@@ -63,6 +63,11 @@ public class Robot extends IterativeRobot {
     static Joystick gamePad2 = new Joystick(1);
     static Timer clock = new Timer();
     
+    int solenoid1PCM = 1;
+    int solenoid2PCM = 2;
+    Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
+    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
+    
     DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
    
