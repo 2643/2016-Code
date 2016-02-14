@@ -1,0 +1,13 @@
+
+package org.usfirst.frc.team2643.robot;
+
+ 
+    public void arcadedrive() {
+    	   double yPosition = driveStick.getY();
+    	   double xPosition = driveStick.getX();
+    	    
+    	    frontRightMotor.set(yPosition-xPosition);
+    	    backRightMotor.set(yPosition-xPosition);
+    	    frontLeftMotor.set(yPosition+xPosition);
+    	    backLeftMotor.set(yPosition+xPosition);
+}

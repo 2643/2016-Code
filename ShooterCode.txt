@@ -1,0 +1,14 @@
+import java.lang.Math;
+
+   
+    Talon shooterMotor = new Talon(8);
+    final double DISTANCE_POWER_CONSTANT = 0;
+    double currentRPS = 0;
+    double currentPower = 0;
+    
+    }
+            //*calculate current RPS
+
+        if(stick1.getRawButton(0)){
+                //set distance to certain numbers for presets
+                shooterMotor.set(pidControl(sqrt(distance)*DISTANCE_POWER_CONSTANT,currentRPS,currentPower));

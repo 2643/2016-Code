@@ -1,0 +1,36 @@
+﻿package org.usfirst.frc.team2643.robot;
+
+
+import java.lang.Math;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
+Talon backLeftMotor = new Talon(0);
+Talon backRightMotor = new Talon(1);
+Talon frontLeftMotor = new Talon(2);
+Talon frontRightMotor = new Talon(3);
+Joystick leftstick = new Joystick(2);
+Joystick rightstick = new Joystick(3);
+
+
+
+
+public void tankDrive() {
+
+
+     
+     double leftPosition = leftStick.getY();
+     double rightPosition = rightStick.getRawAxis(3);
+     
+     backLeftMotor.set(leftPosition);
+     backRightMotor.set(rightPosition);
+     frontLeftMotor.set(leftPosition);
+     frontRightMotor.set(rightPosition);
+     
+}
