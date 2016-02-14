@@ -17,16 +17,17 @@ if(gamePad.getRawButton(9)){ //update button numbers
     arcadeDrive();
   }
 }
-  public static void solenoid(){
+  
     
          if(gamePad.getRawButton(2)){
-        	 solenoid1.set(!solenoid1State);
-        	 solenoid2.set(!solenoid2State);
+        	 solenoid1.set(solenoid1State);
+        	 solenoid2.set(solenoid2State);
   }
     	/*int solenoid1PCM = 1;
     	int solenoid2PCM = 2;
     	boolean solenoid1State = solenoid1.get();
     	boolean solenoid2State = solenoid2.get();
+    	solenoid1S
     	Add these in final
     	*/
     	
@@ -54,8 +55,15 @@ if(gamePad.getRawButton(9)){ //update button numbers
     	    backLeftMotor.set(yPosition+xPosition);
 }
     
-    /**
-     * This function is called periodically during test mode
-     */
-
 }
+public static void intake(){
+
+    if(gamePad.getRawButton(0)){
+    	intakeMotor.set(speed);
+    }
+    else if(gamePad.getRawButton(1)){
+    	intakeMotor.set(-speed);
+    }
+    }
+    }
+    
