@@ -62,6 +62,7 @@ public class Robot extends IterativeRobot {
     static Joystick gamePad = new Joystick(0);
     static Joystick gamePad2 = new Joystick(1);
     static Timer clock = new Timer();
+    static  int speed = 0;
     
     int solenoid1PCM = 1;
     int solenoid2PCM = 2;
@@ -155,8 +156,8 @@ public class Robot extends IterativeRobot {
     
     
     public void teleopPeriodic() {
-    	//TeleOp.drive();
-    	//TeleOp.intake();
+    	TeleOp.drive();
+    	TeleOp.intake();
     }
     
    
