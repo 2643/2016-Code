@@ -35,7 +35,72 @@ if(gamePad.getRawButton(9)){ //update button numbers
    
          //put into a method
          
+public static void climberCode(){
+  if(gamePad2.getRawButton(1)){
+			switch(state){
+			
+			case climberState:
+				
+					climber.set(0.5);
+				if(topLimitSwitch.get()){
+					climber.set(0.0);
+					
+					state = climberStateDown;
+				}
+				break;
+				
+			climberStateDown:
+				
+			if(gamepad2.getRawButton.get(3)){
+				climber.set(-0.5);
+				if(bottomLimitSwitch.get()){
+					climber.set(0.0);
+					state = hookMoveUp;
+			}
+			}
+				break;
+				
+			hookMoveUp:
+				
+				 if(gamePad.getRawButton(4)){
+		        	 winchOn=!winchOn;
+				if(winchOn){
+				winch1.set(0.5);
+				winch2.set(0.5);
+				winch3.set(0.5);
+				state = hookMoveDown;
+				}
+				else{
+					winch1.set(0.0);
+					winch2.set(0.0);
+					winch3.set(0.0);
+					state = hookMoveDown;
+				}
+				 }
+			break;
+			
+		hookMoveDown:
+			 if(gamePad.getRawButton(5)){
+	        	 winchDown=!winchDown;
+			if(winchDown){
+			winch1.set(-0.5);
+			winch2.set(0.5);
+			winch3.set(0.5);
+			
+			}
+			else{
+				winch1.set(0.0);
+				winch2.set(0.0);
+				winch3.set(0.0);
+				
+			}
+	}
+			break;
 
+}
+}
+	}	
+}
     
     public static void tankDrive(){
     	leftPosition = gamePad.getY();
