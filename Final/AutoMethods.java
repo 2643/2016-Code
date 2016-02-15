@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj.Encoder;
 
 public class AutoMethods extends Robot{
 	
-	
+	//set drive sets the two sides to a speed indep.
     public static void setDrive(double leftSpeed,int rightSpeed){
     	frontRightMotor.set(rightSpeed);
     	backRightMotor.set(rightSpeed);
     	backLeftMotor.set(leftSpeed);
     	frontLeftMotor.set(leftSpeed);
     }
-    
+    //set drive sets all driving 
     public static void setDrive(double speed){
     	frontLeftMotor.set(speed);
         frontRightMotor.set(speed);
@@ -21,6 +21,7 @@ public class AutoMethods extends Robot{
     
    
     public static boolean moveForward(double distanceTillUp,double speed){
+    	//sets the drive to go forward , returns true or false
                 if(distanceTillUp > Math.abs(leftDriveEncoder.get()) || distanceTillUp > Math.abs(rightDriveEncoder.get())){
                       	setDrive(speed);
                       	return false;
@@ -29,14 +30,15 @@ public class AutoMethods extends Robot{
         }
 
    public static boolean crossChevalDeFrise() {
+   	//moves piston and goes forward
         	if(leftDriveEncoder.get() >= 60 && rightDriveEncoder.get() >= 60){
-        	//	piston.set(false);
+        		piston.set(false);
         	}else{
-        		//piston.set(true);
+        		piston.set(true);
         	}
 			return moveForward(distanceOverDefense,.5);
         }
-        
+        //all of this moves forward 
         public static boolean crossMoat() {
                 return moveForward(distanceOverDefense,0.7);
         }
@@ -56,10 +58,11 @@ public class AutoMethods extends Robot{
         	 return moveForward(distanceOverDefense,0.3);
         }
 
-
+//turnMove is self explaitory it makes the robot turn then move
         public static int turnMove(int shiftStartingPosition, int turnMoveState) {
                	switch(turnMoveState){
                	case 0:
+               		//turn left or right
                		if(shiftStartingPosition < 0){
                			if(turnRight()){
                				setDrive(1);
@@ -77,12 +80,14 @@ public class AutoMethods extends Robot{
                		}
                		break;
                	case 1:
+               		//move towards the desired defense
                		if(moveForward(shiftStartingPosition*distanceBetweenDefenses,1)){
                			resetEncoders();
                			return 2;
                		}
                		break;
                	case 2:
+               		//turn again  
                		if(shiftStartingPosition > 0){
                			if(turnRight()){
                				setDrive(1);
