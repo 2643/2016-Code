@@ -11,7 +11,7 @@ if(rightStick.getRawButton(3)){
   else if(leftStick.getRawButton(3)){ //update button numbers
     isTankDrive = true;
   }
-  if(isTankDrive){
+  else if(isTankDrive){
     tankDrive();
   }else{
     arcadeDrive();
@@ -120,9 +120,5 @@ public static void climberCode(){
     	    backLeftMotor.set(yPosition+xPosition);
 }
     
-}
-public static void intake(){
 
-     
-    	intakeMotor.set(gamePad.getY);
-  
+]
