@@ -73,6 +73,9 @@ public class Robot extends IterativeRobot {
     static boolean solenoid1State = solenoid1.get();
     static boolean solenoid2State = solenoid2.get();
     
+    boolean winchOn = false;
+    boolean winchDown = false;
+    
     DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
    
