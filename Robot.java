@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team2643.robot;
 
 import java.lang.Math;
@@ -6,6 +5,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
@@ -28,55 +28,57 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;    
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
     
-    static boolean isTankDrive = false;
-    static double turn90Amount = 0;
-    static double distanceBetweenDefenses = 0;
-    static double distanceToDefense = 0;
-    static double distanceToFinishDefense = 0;
+   // static boolean isTankDrive = false;
+    static double turn90Amount = 400;
+    static double distanceBetweenDefenses = 200;
+    static double distanceToDefense = 300;
+    static double distanceToFinishDefense = 100;
     static double leftPosition = 0;
     static double rightPosition = 0;
-    static double distanceUntillInfront = 0;
-    static double distanceOverDefense = 0;
-    String autoState = "moveForward";
+    double distanceUntillInfront = 100;
+    static double distanceOverDefense = 400;
+
     final double DISTANCE_POWER_CONSTANT = 0;
     int turnMoveState = 0;
     boolean finished = false;
     double currentRPS = 0;
     double currentPower = 0;
     double distance = 1;
-    
-    static Solenoid piston = new Solenoid(0);
+    static boolean isTankDrive = false;
+    static final int turnMove = 0;
+    static final int moveForward = 1;
+    static final int cross = 2;
+    static int autoState = moveForward;
+    static final int finishedState = 3;
+    static boolean solenoidToggleIfAlreadyPressed = false;
+  //  static Solenoid piston = new Solenoid(0);
     static Talon backLeftMotor = new Talon(0);
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
     static Talon frontRightMotor = new Talon(3);
     static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
-    static Victor climbMotor1 = new Victor(0);
-    static Victor climbMotor2 = new Victor(0);
-    static Victor climbMotor3 = new Victor(0);
-    static Victor climbArmMotor = new Victor(0);
+    //static Victor climbMotor1 = new Victor(0);
+   // static Victor climbMotor2 = new Victor(0);
+   // static Victor climbMotor3 = new Victor(0);
+   // static Victor climbArmMotor = new Victor(0);
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    static Encoder shooterEncoder = new Encoder(4,5);
-    static Joystick rightStick = new Joystick(0);
-    static Joystick gamePad = new Joystick(1);
-    static Joystick leftStick = new Joystick(2);
+    static Joystick gamePad = new Joystick(0);
+    static Joystick gamePad2 = new Joystick(1);
+   // static Encoder shooterEncoder = new Encoder(4,5);
+    //static Joystick gamePad = new Joystick(0);
+   // static Joystick gamePad2 = new Joystick(1);
+  //static Timer clock = new Timer();
+    DigitalInput  ballOpticSensor = new DigitalInput(4);
     
-    static Timer clock = new Timer();
-    static  int speed = 0;
+   // RobotDrive drive = new RobotDrive( frontLeftMotor,  backLeftMotor,  frontRightMotor,  backRightMotor);
     
-    int solenoid1PCM = 1;
-    int solenoid2PCM = 2;
-    Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
-    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
-    static boolean solenoid1State = solenoid1.get();
-    static boolean solenoid2State = solenoid2.get();
     
-    boolean winchOn = false;
-    boolean winchDown = false;
     
-    DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
+    
+    
+   // DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
    
     
@@ -88,6 +90,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	System.out.println("1");
         SmartDashboard.putNumber("DB/Slider 0" , 0.0);
         SmartDashboard.putNumber("DB/Slider 1" , 0.0);
         chooser = new SendableChooser();
@@ -106,6 +109,7 @@ public class Robot extends IterativeRobot {
          * If using the SendableChooser make sure to add them to the chooser code above as well.
          */
     public void autonomousInit() {
+    	System.out.println("2");
             autoSelected = (String) chooser.getSelected();
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
@@ -118,21 +122,28 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	System.out.println("3");
+    	
     	switch(autoState){
-		case "turnMove":
+		case turnMove:
+			System.out.println("turnMove");
 			turnMoveState = AutoMethods.turnMove(shiftStartingPosition,turnMoveState);
 			if(turnMoveState > 2){
-				autoState = "moveForward";
 				AutoMethods.resetEncoders();
+				autoState = moveForward;
+				
 			}
 			break;
-		case "moveForward": 
-			if(AutoMethods.moveForward(distanceUntillInfront,1)){
-				autoState = "cross";
+		case moveForward: 
+			System.out.println("moveforward");
+			System.out.println(leftDriveEncoder.get());
+			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
+				autoState = cross;
 			}
 			break;
-		case "cross":
+		case cross:
+			System.out.println("cross");
 			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
              	finished = AutoMethods.crossChevalDeFrise();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 1){
@@ -145,25 +156,43 @@ public class Robot extends IterativeRobot {
             	finished = AutoMethods.crossRockWall();
            }
 		if(finished){
-			autoState = "finished";
+			autoState = finishedState;
 		}
-			break;
-		case "finished":
-			//whatever when its done
+		break;
+		case finishedState:
+	    AutoMethods.setDrive(0);
 			break;
 	}
     }
 
 
     public void teleopInit() {
-    	clock.start();
+    	//clock.start();
       }
     
     
+   
+    
     public void teleopPeriodic() {
-    	TeleOp.drive();
-    	TeleOp.intake();
+    	
+    	if(ballOpticSensor.get()) {
+    		System.out.println("No ball");
+    	}
+    	else {
+    		System.out.println("Ball");
+    	
+    	
+    	}
+    	
+    	//TeleOp.drive();
+    	
+    	
+    	
+    	
+    	//TeleOp.intake();
     }
+    
+   
     
    
     
