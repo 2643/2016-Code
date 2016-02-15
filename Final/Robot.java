@@ -229,10 +229,16 @@ public class Robot extends IterativeRobot {
     
    intakeMotor.set(gamePad.getY());
    
-   if(gamePad.getRawButton(5))
+     if(gamePad.getRawButton(5))
    {
-   	shooterMotor.set(1);
+   	shooterMotor.set(-1);
    }
+    else{
+    	shooterMotor.set(0);
+    }
+    }
+    
+    
     //*calculate current RPS
     
     //ADD THIS BACK WHEN PID CONTROL IS DONE 
