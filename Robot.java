@@ -59,9 +59,9 @@ public class Robot extends IterativeRobot {
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
     static Encoder shooterEncoder = new Encoder(4,5);
-    static Joystick stick = new Joystick(0);
+    static Joystick rightStick = new Joystick(0);
     static Joystick gamePad = new Joystick(1);
-    static Joystick stick2 = new Joystick(2);
+    static Joystick leftStick = new Joystick(2);
     
     static Timer clock = new Timer();
     static  int speed = 0;
