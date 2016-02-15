@@ -56,20 +56,20 @@ public class Robot extends IterativeRobot {
     static final int finishedState = 3;
     static boolean solenoidToggleIfAlreadyPressed = false;
     //variables here 
-    static Solenoid piston = new Solenoid(0);
+    static Solenoid piston = new Solenoid(2);
     //Drive Motors
-    static Talon backLeftMotor = new Talon(0);
+    static Talon backLeftMotor = new Talon(3);
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
-    static Talon frontRightMotor = new Talon(3);
+    static Talon frontRightMotor = new Talon(0);
     //shooter motor stuff
     static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
     //climb motors
-    static Victor climbMotor1 = new Victor(0);
-    static Victor climbMotor2 = new Victor(0);
-    static Victor climbMotor3 = new Victor(0);
-    static Victor climbArmMotor = new Victor(0);
+    static Victor climbMotor1 = new Victor(7);
+    static Victor climbMotor2 = new Victor(8);
+    static Victor climbMotor3 = new Victor(9);
+    static Victor climbArmMotor = new Victor(6);
     //encoders
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
