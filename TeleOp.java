@@ -5,10 +5,10 @@ public class TeleOp extends Robot{
   
     // add "boolean tankDrive = false" in final
   public static void drive(){
-if(gamePad2.getRawButton(9)){ //update button numbers
+if(rightStick.getRawButton(3)){ 
     isTankDrive = false;
   }
-  else if(gamePad2.getRawButton(10)){ //update button numbers
+  else if(leftStick.getRawButton(3)){ //update button numbers
     isTankDrive = true;
   }
   if(isTankDrive){
@@ -19,7 +19,7 @@ if(gamePad2.getRawButton(9)){ //update button numbers
 }
   
     
-         if(gamePad2.getRawButton(2)){
+         if(rightStick.getRawButton(2)){
         	 solenoid1.set(solenoid1State);
         	 solenoid2.set(solenoid2State);
   }
@@ -36,7 +36,7 @@ if(gamePad2.getRawButton(9)){ //update button numbers
          //put into a method
          
 public static void climberCode(){
-  if(gamePad2.getRawButton(1)){
+  if(gamePad.getRawButton(2)){
 			switch(state){
 			
 			case climberState:
@@ -51,7 +51,7 @@ public static void climberCode(){
 				
 			climberStateDown:
 				
-			if(gamepad2.getRawButton.get(3)){
+			if(gamepad.getRawButton.get(3)){
 				climber.set(-0.5);
 				if(bottomLimitSwitch.get()){
 					climber.set(0.0);
@@ -80,7 +80,7 @@ public static void climberCode(){
 			break;
 			
 		hookMoveDown:
-			 if(gamePad2.getRawButton(5)){
+			 if(gamePad.getRawButton(5)){
 	        	 winchDown=!winchDown;
 			if(winchDown){
 			winch1.set(-0.5);
@@ -103,16 +103,16 @@ public static void climberCode(){
 }
     
     public static void tankDrive(){
-    	leftPosition = gamePad.getY();
-    	rightPosition = gamePad2.getRawAxis(3);
+    	leftPosition = leftStick.getY();
+    	rightPosition = rightStick.getY();
     	backLeftMotor.set(leftPosition);
         backRightMotor.set(rightPosition);
         frontLeftMotor.set(leftPosition);
         frontRightMotor.set(rightPosition); 
     }
      public static void arcadeDrive() {
-    	   double yPosition = gamePad.getY();
-    	   double xPosition = gamePad.getX();
+    	   double yPosition = rightStick.getY();
+    	   double xPosition = rightStick.getX();
     	    
     	    frontRightMotor.set(yPosition-xPosition);
     	    backRightMotor.set(yPosition-xPosition);
@@ -123,12 +123,6 @@ public static void climberCode(){
 }
 public static void intake(){
 
-    if(gamePad.getRawButton(0)){
-    	intakeMotor.set(speed);
-    }
-    else if(gamePad.getRawButton(1)){
-    	intakeMotor.set(-speed);
-    }
-    }
-    }
-    
+     
+    	intakeMotor.set(gamePad.getY);
+  
