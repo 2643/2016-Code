@@ -5,10 +5,10 @@ public class TeleOp extends Robot{
   
     // add "boolean tankDrive = false" in final
   public static void drive(){
-if(gamePad.getRawButton(9)){ //update button numbers
+if(gamePad2.getRawButton(9)){ //update button numbers
     isTankDrive = false;
   }
-  else if(gamePad.getRawButton(10)){ //update button numbers
+  else if(gamePad2.getRawButton(10)){ //update button numbers
     isTankDrive = true;
   }
   if(isTankDrive){
@@ -19,7 +19,7 @@ if(gamePad.getRawButton(9)){ //update button numbers
 }
   
     
-         if(gamePad.getRawButton(2)){
+         if(gamePad2.getRawButton(2)){
         	 solenoid1.set(solenoid1State);
         	 solenoid2.set(solenoid2State);
   }
@@ -80,7 +80,7 @@ public static void climberCode(){
 			break;
 			
 		hookMoveDown:
-			 if(gamePad.getRawButton(5)){
+			 if(gamePad2.getRawButton(5)){
 	        	 winchDown=!winchDown;
 			if(winchDown){
 			winch1.set(-0.5);
