@@ -82,7 +82,9 @@ public class Robot extends IterativeRobot {
     
     static Timer clock = new Timer();
     DigitalInput  ballOpticSensor = new DigitalInput(4);
-    
+    //Solenoids
+   Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
+    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
     //RobotDrive drive = new RobotDrive( frontLeftMotor,  backLeftMotor,  frontRightMotor,  backRightMotor);
     
     
@@ -204,7 +206,25 @@ public class Robot extends IterativeRobot {
     	
     	TeleOp.drive();
     	
-    	
+    		int solenoid1PCM = 1;
+	int solenoid2PCM = 2;
+	
+    Joystick gamePad = new Joystick(1);
+    
+    
+    public void teleopPeriodic() {
+
+         //add already pressed boolean in robot
+         if(gamePad.getRawButton(2) && !alreadyPressed){
+        	solenoid1.set(!solenoid1.get());
+        	solenoid2.set(!solenoid2.get());
+        	alreadyPressed = true;
+       	 }
+       	 if(!gamePad.getRawButton(2)){
+		alreadyPressed = false;       	 
+       	 }
+
+         }
     	
     	
     	//TeleOp.intake();
