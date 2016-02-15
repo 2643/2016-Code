@@ -98,16 +98,16 @@ public static void climberCode(){
 			break;
 
 }
+
 }
-	}	
-}
-    
+
+        
     public static void tankDrive(){
     	leftPosition = leftStick.getY();
     	rightPosition = rightStick.getY();
-    	backLeftMotor.set(leftPosition);
+    	backLeftMotor.set(-leftPosition);
         backRightMotor.set(rightPosition);
-        frontLeftMotor.set(leftPosition);
+        frontLeftMotor.set(-leftPosition);
         frontRightMotor.set(rightPosition); 
     }
      public static void arcadeDrive() {
@@ -116,9 +116,12 @@ public static void climberCode(){
     	    
     	    frontRightMotor.set(yPosition-xPosition);
     	    backRightMotor.set(yPosition-xPosition);
-    	    frontLeftMotor.set(yPosition+xPosition);
-    	    backLeftMotor.set(yPosition+xPosition);
+    	    frontLeftMotor.set((-1)*(yPosition+xPosition));
+    	    backLeftMotor.set((-1)*(yPosition+xPosition));
 }
     
+
+
+
 
 ]
