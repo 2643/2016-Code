@@ -1,0 +1,1137 @@
+﻿package org.usfirst.frc.team2643.robot;
+
+	
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	import com.ni.vision.NIVision;
+
+	
+
+	import com.ni.vision.NIVision.Image;
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	import edu.wpi.first.wpilibj.CameraServer;
+
+	
+
+	import edu.wpi.first.wpilibj.IterativeRobot;
+
+	
+
+	import edu.wpi.first.wpilibj.Joystick;
+
+	
+
+	import edu.wpi.first.wpilibj.RobotDrive;
+
+	
+
+	import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+
+	
+
+	import edu.wpi.first.wpilibj.image.BinaryImage;
+
+	
+
+	import edu.wpi.first.wpilibj.image.HSLImage;
+
+	
+
+	import edu.wpi.first.wpilibj.image.NIVisionException;
+
+	
+
+	import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
+
+	
+
+	import edu.wpi.first.wpilibj.Talon;
+
+	
+
+	import edu.wpi.first.wpilibj.Timer;
+
+	
+
+	import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+	
+
+	import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+	
+
+	import edu.wpi.first.wpilibj.vision.AxisCamera;
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	/**
+
+	
+
+	* The VM is configured to automatically run this class, and to call the
+
+	
+
+	* functions corresponding to each mode, as described in the IterativeRobot
+
+	
+
+	* documentation. If you change the name of this class or the package after
+
+	
+
+	* creating this project, you must also update the manifest file in the resource
+
+	
+
+	* directory.
+
+	
+
+	*/
+
+	
+
+	public class Robot extends IterativeRobot {
+
+	
+
+	       //camera code variables
+
+	
+
+	       int hueLow;
+
+	
+
+	   int hueHigh;
+
+	
+
+	   int saturationLow;
+
+	
+
+	   int saturationHigh;
+
+	
+
+	   int luminenceLow;
+
+	
+
+	   int luminenceHigh;
+
+	
+
+	   double targetWidth = 0;
+
+	
+
+	  
+
+	
+
+	   String cameraHost = "10.26.43.11";
+
+	
+
+	   AxisCamera cam;
+
+	
+
+	   HSLImage initPic;
+
+	
+
+	   BinaryImage maskedPic;
+
+	
+
+	   ParticleAnalysisReport [] particleReports;
+
+	
+
+	   Image frame;
+
+	
+
+	   //camera variables end
+
+	
+
+	       
+
+	
+
+	       Talon frontRightDTMotor = new Talon(1);
+
+	
+
+	   Talon backRightDTMotor = new Talon(0);
+
+	
+
+	   Talon frontLeftDTMotor = new Talon(2);
+
+	
+
+	   Talon backLeftDTMotor = new Talon(3);
+
+	
+
+	   Talon intakeMotor = new Talon(4);
+
+	
+
+	  // Talon climberMotor = new Talon(0);
+
+	
+
+	   Talon shooterMotor = new Talon(5);
+
+	
+
+	   Joystick stick = new Joystick(0);
+
+	
+
+	   Joystick shooterStick = new Joystick(1);
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	   RobotDrive arcade = new RobotDrive(frontLeftDTMotor, backLeftDTMotor, frontRightDTMotor, backRightDTMotor);
+
+	
+
+	   final String defaultAuto = "Default";
+
+	
+
+	   final String customAuto = "My Auto";
+
+	
+
+	   String autoSelected;
+
+	
+
+	   SendableChooser chooser;
+
+	
+
+	       
+
+	
+
+	   /**
+
+	
+
+	    * This function is run when the robot is first started up and should be
+
+	
+
+	    * used for any initialization code.
+
+	
+
+	    */
+
+	
+
+	   public void robotInit() {
+
+	
+
+	           //cam stuff
+
+	
+
+	           cam = new AxisCamera(cameraHost);
+
+	
+
+	       frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+
+	
+
+	           
+
+	
+
+	       chooser = new SendableChooser();
+
+	
+
+	       chooser.addDefault("Default Auto", defaultAuto);
+
+	
+
+	       chooser.addObject("My Auto", customAuto);
+
+	
+
+	       SmartDashboard.putData("Auto choices", chooser);
+
+	
+
+	       arcade.setInvertedMotor(MotorType.kFrontLeft, true);
+
+	
+
+	       arcade.setInvertedMotor(MotorType.kFrontRight, true);
+
+	
+
+	       arcade.setInvertedMotor(MotorType.kRearLeft, true);
+
+	
+
+	       arcade.setInvertedMotor(MotorType.kRearRight, true);
+
+	
+
+	   }
+
+	
+
+	   
+
+	
+
+	       /**
+
+	
+
+	        * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
+
+	
+
+	        * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
+
+	
+
+	        * Dashboard, remove all of the chooser code and uncomment the getString line to get the auto name from the text box
+
+	
+
+	        * below the Gyro
+
+	
+
+	        *
+
+	
+
+	        * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
+
+	
+
+	        * If using the SendableChooser make sure to add them to the chooser code above as well.
+
+	
+
+	        */
+
+	
+
+	   public void autonomousInit() {
+
+	
+
+	           autoSelected = (String) chooser.getSelected();
+
+	
+
+	//                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+
+	
+
+	               System.out.println("Auto selected: " + autoSelected);
+
+	
+
+	   }
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	   /**
+
+	
+
+	    * This function is called periodically during autonomous
+
+	
+
+	    */
+
+	
+
+	   public void autonomousPeriodic() {
+
+	
+
+	           switch(autoSelected) {
+
+	
+
+	           case customAuto:
+
+	
+
+	       //Put custom auto code here   
+
+	
+
+	           break;
+
+	
+
+	           case defaultAuto:
+
+	
+
+	           default:
+
+	
+
+	           //Put default auto code here
+
+	
+
+	           break;
+
+	
+
+	           }
+
+	
+
+	   }
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	   /**
+
+	
+
+	    * This function is called periodically during operator control
+
+	
+
+	    */
+
+	
+
+	   public void teleopPeriodic() {
+
+	
+
+	           //vision code
+
+	
+
+	           cam.getImage(frame);
+
+	
+
+	           CameraServer.getInstance().setImage(frame);
+
+	
+
+	     
+
+	
+
+	      /* try {
+
+	
+
+	           initPic = cam.getImage();
+
+	
+
+	           maskedPic = initPic.thresholdHSL(hueLow, hueHigh, saturationLow, saturationHigh, luminenceLow, luminenceHigh);
+
+	
+
+	           //particleReports = maskedPic.getOrderedParticleAnalysisReports();
+
+	
+
+	           //Timer.delay(.75);
+
+	
+
+	       } catch (NIVisionException e) {
+
+	
+
+	           // TODO Auto-generated catch block
+
+	
+
+	           e.printStackTrace();
+
+	
+
+	       }*/
+
+	
+
+	      
+
+	
+
+	      /* for (int i = 0; i < particleReports.length; i++){
+
+	
+
+	           targetWidth += particleReports[i].boundingRectWidth;
+
+	
+
+	       }
+
+	
+
+	       System.out.println(targetWidth);*/
+
+	
+
+	       //vision code end
+
+	
+
+	       
+
+	
+
+	//double shooterStick = shooterStick.getY();
+
+	
+
+	       
+
+	
+
+	        arcade.arcadeDrive(stick, true);
+
+	
+
+	        arcade.tankDrive(stick, shooterStick, true);
+
+	
+
+	           /*frontRightDTMotor.set((-.3)*shooterStick.getY());
+
+	
+
+	           frontLeftDTMotor.set((.3)*stick.getY());
+
+	
+
+	           backRightDTMotor.set((-.3)*shooterStick.getY());
+
+	
+
+	           backLeftDTMotor.set((.3)*stick.getY());*\
+
+	
+
+	        // Arcade drive code in case above dcode fails
+
+	
+
+	         
+
+	
+
+	      /*  frontLeftDTMotor.set(-stick.getY() + stick.getX());
+
+	
+
+	        backLeftDTMotor.set(-stick.getY() + stick.getX());
+
+	
+
+	        frontRightDTMotor.set(stick.getY() - stick.getX());
+
+	
+
+	        backRightDTMotor.set(stick.getY() - stick.getX());*/
+
+	
+
+	        
+
+	
+
+	       //shooterMotor.set(shooterStick);
+
+	
+
+	       
+
+	
+
+	       double intakeSpeedZ = (shooterStick.getZ()-1)/2;
+
+	
+
+	       
+
+	
+
+	       boolean trigger = stick.getRawButton(1);
+
+	
+
+	       boolean two = stick.getRawButton(2);
+
+	
+
+	       boolean shooterButton1 = shooterStick.getRawButton(1);
+
+	
+
+	       boolean shooterButton2 = shooterStick.getRawButton(2);
+
+	
+
+	       boolean shooterButton3 = shooterStick.getRawButton(3);
+
+	
+
+	       boolean shooterButton4 = shooterStick.getRawButton(4);
+
+	
+
+	       boolean shooterButton5 = shooterStick.getRawButton(5);
+
+	
+
+	       boolean shooterButton6 = shooterStick.getRawButton(6);
+
+	
+
+	       boolean shooterButton7 = shooterStick.getRawButton(7);
+
+	
+
+	       boolean shooterButton8 = shooterStick.getRawButton(8);
+
+	
+
+	       boolean shooterButton9 = shooterStick.getRawButton(9);
+
+	
+
+	       boolean shooterButton10 = shooterStick.getRawButton(10);
+
+	
+
+	      // boolean shooterTrigger = stick.getRawButton(3);
+
+	
+
+	      // boolean button4 = stick.getRawButton(4);
+
+	
+
+	       //boolean button5 = stick.getRawButton(5);
+
+	
+
+	       
+
+	
+
+	       //RPM to get into goal tests.
+
+	
+
+	       if(shooterButton1 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.82);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton2 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.84);
+
+	
+
+	       }
+
+	
+
+	       
+
+	
+
+	       else if(shooterButton3 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.86);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton4 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.88);
+
+	
+
+	       }
+
+	
+
+	       
+
+	
+
+	       else if(shooterButton5 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-9);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton6 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.92);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton7 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.94);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton8 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.96);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton9 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-0.98);
+
+	
+
+	       }
+
+	
+
+	       else if(shooterButton10 == true)
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(-1);
+
+	
+
+	       }
+
+	
+
+	       else
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(0);
+
+	
+
+	       }
+
+	
+
+	       //Ends RPM to get into goal tests.
+
+	
+
+	       if(trigger == true)
+
+	
+
+	       {
+
+	
+
+	               intakeMotor.set(intakeSpeedZ);                        //Sucks in boulders
+
+	
+
+	       }
+
+	
+
+	       else if(two == true)
+
+	
+
+	       {
+
+	
+
+	               intakeMotor.set(-intakeSpeedZ);                        //Reverses the direction of the intakes
+
+	
+
+	       }
+
+	
+
+	       else
+
+	
+
+	       {
+
+	
+
+	               intakeMotor.set(0);                                //Sets intake to 0
+
+	
+
+	       }
+
+	
+
+	       
+
+	
+
+	       
+
+	
+
+	       
+
+	
+
+	    /*   if(button4 == true)
+
+	
+
+	       {
+
+	
+
+	               climberMotor.set(0.6);
+
+	
+
+	       }
+
+	
+
+	       else if(button5 == true)
+
+	
+
+	       {
+
+	
+
+	               climberMotor.set(-0.6);
+
+	
+
+	       }
+
+	
+
+	       else
+
+	
+
+	       {
+
+	
+
+	               climberMotor.set(0);
+
+	
+
+	       }
+
+	
+
+	       */
+
+	
+
+	       //if(shooterTrigger == true)
+
+	
+
+	       //{
+
+	
+
+	               
+
+	
+
+	       //}
+
+	
+
+	       /*else
+
+	
+
+	       {
+
+	
+
+	               shooterMotor.set(0);
+
+	
+
+	       }
+
+	
+
+	       */
+
+	
+
+	   }
+
+	
+
+	   
+
+	
+
+	   private void getRawButton(int i) {
+
+	
+
+	               // TODO Auto-generated method stub
+
+	
+
+	               
+
+	
+
+	       }
+
+	
+
+	
+
+
+	
+
+	
+
+
+	
+
+	       /**
+
+	
+
+	    * This function is called periodically during test mode
+
+	
+
+	    */
+
+	
+
+	   public void testPeriodic() {
+
+	
+
+	   
+
+	
+
+	   }
+
+	
+
+	   
+
+	
+
+	   public void useCamera(){
+
+	
+
+	           
+
+	
+
+	   }
+
+	
+
+	   
+
+	
+
+	   
+
+	
+
+	}
