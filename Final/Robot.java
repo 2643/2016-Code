@@ -206,10 +206,7 @@ public class Robot extends IterativeRobot {
     	
     	TeleOp.drive();
     	
-    		int solenoid1PCM = 1;
-	int solenoid2PCM = 2;
 	
-    Joystick gamePad = new Joystick(1);
     
     
     public void teleopPeriodic() {
@@ -230,10 +227,12 @@ public class Robot extends IterativeRobot {
     	//TeleOp.intake();
     }
     
+   intakeMotor.set(gamePad.getY());
    
-    
-   
-    
+   if(gamePad.getRawButton(5))
+   {
+   	shooterMotor.set(1);
+   }
     //*calculate current RPS
     
     //ADD THIS BACK WHEN PID CONTROL IS DONE 
