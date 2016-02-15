@@ -35,9 +35,9 @@ public class Robot extends IterativeRobot {
     static double distanceToFinishDefense = 0;
     static double leftPosition = 0;
     static double rightPosition = 0;
-    double distanceUntillInfront = 0;
+    static double distanceUntillInfront = 0;
     static double distanceOverDefense = 0;
-    String autoState = "moveForawrd";
+    String autoState = "moveForward";
     final double DISTANCE_POWER_CONSTANT = 0;
     int turnMoveState = 0;
     boolean finished = false;
