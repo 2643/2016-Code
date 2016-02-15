@@ -1,15 +1,17 @@
 
 package org.usfirst.frc.team2643.robot;
 
-
+import java.lang.Math;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Solenoid;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -19,53 +21,62 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	public static int frontRightMotorPWM = 3;
-	public static int backLeftMotorPWM = 0;
-	
-	
-	
+
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
-    SendableChooser chooser;
-    int barrierInfront = (int) (SmartDashboard.getNumber("DB/Slider 0", 0)*2);
+    SendableChooser chooser;    
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
-    int state = 0;
-    int porticulus = 0;
-    int sallyPort = 0;
-    int drawBridge = 0;
-    int arcadeDriveDrawbridge = 3;
-    int arcadeDrivePorticulus = 4;
-    int arcadeDriveSallyPort = 4;
     
+    static boolean isTankDrive = false;
     static double turn90Amount = 0;
     static double distanceBetweenDefenses = 0;
     static double distanceToDefense = 0;
     static double distanceToFinishDefense = 0;
-    static double distanceToPullDown = 0;
-    static double topOfLinearSlide = 0;
-    static double highHeightBoundary = 80;
-    static double lowHeightBoundary = 20;
-    double leftPosition = 0;
-    double rightPosition = 0;
-    double distanceTillUp = 0;
-    double distanceOverDefense = 0;
-    static Talon backLeftMotor = new Talon(backLeftMotorPWM);
+    static double leftPosition = 0;
+    static double rightPosition = 0;
+    static double distanceUntillInfront = 0;
+    static double distanceOverDefense = 0;
+    String autoState = "moveForward";
+    final double DISTANCE_POWER_CONSTANT = 0;
+    int turnMoveState = 0;
+    boolean finished = false;
+    double currentRPS = 0;
+    double currentPower = 0;
+    double distance = 1;
+    
+    static Solenoid piston = new Solenoid(0);
+    static Talon backLeftMotor = new Talon(0);
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
-    static Talon frontRightMotor = new Talon( frontRightMotorPWM);
-    static Talon hookMotor = new Talon(4);
-    static Talon lsMotor = new Talon(5);
-    static Talon linearSlide2 = new Talon(5);
+    static Talon frontRightMotor = new Talon(3);
+    static Victor shooterMotor = new Victor(4);
+    static Victor intakeMotor = new Victor(5);
+    static Victor climbMotor1 = new Victor(0);
+    static Victor climbMotor2 = new Victor(0);
+    static Victor climbMotor3 = new Victor(0);
+    static Victor climbArmMotor = new Victor(0);
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    static Encoder hookEncoder = new Encoder(4,5);
-    static Encoder slideEncoder = new Encoder(6,7);
-    static Joystick gamePad = new Joystick(0);
-    static Joystick gamePad2 = new Joystick(0);
-    static Timer clock = new Timer();
+    static Encoder shooterEncoder = new Encoder(4,5);
+    static Joystick rightStick = new Joystick(0);
+    static Joystick gamePad = new Joystick(1);
+    static Joystick leftStick = new Joystick(2);
     
-    DigitalInput slideBottomLimitSwitch = new DigitalInput(3);
+    static Timer clock = new Timer();
+    static  int speed = 0;
+    
+    int solenoid1PCM = 1;
+    int solenoid2PCM = 2;
+    Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
+    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
+    static boolean solenoid1State = solenoid1.get();
+    static boolean solenoid2State = solenoid2.get();
+    
+    boolean winchOn = false;
+    boolean winchDown = false;
+    
+    DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
     
    
     
@@ -98,43 +109,49 @@ public class Robot extends IterativeRobot {
             autoSelected = (String) chooser.getSelected();
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
-                hookEncoder.reset();
-                AutoMethods.turnMove(shiftStartingPosition);
-                AutoMethods.moveForward(distanceTillUp,1);
-                switch (barrierInfront){
-                case 1:
-                    AutoMethods.crossDrawbridge();
-                    break;
-                case 2:
-                    AutoMethods.crossPortcullis();
-                    break;
-                case 3:
-                    AutoMethods.crossChevalDeFrise();
-                    break;
-                case 4:
-                    AutoMethods.crossSallyPort();
-                    break;
-                case 5:
-                    AutoMethods.crossMoat(distanceOverDefense);
-                    break;
-                case 6:
-                    AutoMethods.crossRoughTerrain(distanceOverDefense);
-                    break;
-                case 7:
-                    AutoMethods.crossRamparts(distanceOverDefense);
-                    break;
-                case 8:
-                    AutoMethods.crossRockWall(distanceOverDefense);
-                    break;
+                AutoMethods.resetEncoders();
             }
-    }
+   
 
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    
+    	switch(autoState){
+		case "turnMove":
+			turnMoveState = AutoMethods.turnMove(shiftStartingPosition,turnMoveState);
+			if(turnMoveState > 2){
+				autoState = "moveForward";
+				AutoMethods.resetEncoders();
+			}
+			break;
+		case "moveForward": 
+			if(AutoMethods.moveForward(distanceUntillInfront,1)){
+				autoState = "cross";
+				AutoMethods.resetEncoders();
+			}
+			break;
+		case "cross":
+			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
+             	finished = AutoMethods.crossChevalDeFrise();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 1){
+            	finished = AutoMethods.crossMoat();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 2){   
+            	finished = AutoMethods.crossRoughTerrain();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 3){
+            	finished = AutoMethods.crossRamparts();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 4){
+            	finished = AutoMethods.crossRockWall();
+           }
+		if(finished){
+			autoState = "finished";
+		}
+			break;
+		case "finished":
+			//whatever when its done
+			break;
+	}
     }
 
 
@@ -144,97 +161,22 @@ public class Robot extends IterativeRobot {
     
     
     public void teleopPeriodic() {
-    	tankDrive();
-    	
+    	TeleOp.drive();
+    	TeleOp.intake();
+    }
+    
+   
+    
+    //*calculate current RPS
+    
+    //ADD THIS BACK WHEN PID CONTROL IS DONE 
 
-    	if(clock.get() > 130 && gamePad.getRawButton(9))
-    	{
-    	        String state = "raiseHooks";
-    	        int stop = 0;
-    	        while(stop == 0)
-    	        {
-    	                switch(state)
-    	                {
-    	                        //raise hooks
-    	                        case "raiseHooks":
-    	                                //move slow as you near the top of the linear slide, if not close then go at normal speed
-    	                                if(slideEncoder.get() > highHeightBoundary - 30)
-    	                                {
-    	                                        //stop at the top, if not at the top go slow
-    	                                        if(slideEncoder.get() > highHeightBoundary)
-    	                                        {
-    	                                                lsMotor.set(0);
-    	                                                leftDriveEncoder.reset();
-    	                                                rightDriveEncoder.reset();
-    	                                                state = "moveForward";
-    	                                        }
-    	                                        else
-    	                                        {
-    	                                                lsMotor.set(.2);
-    	                                        }
-    	                                }
-    	                                else
-    	                                {
-    	                                        lsMotor.set(.5);
-    	                                }
-    	                        break;
-    	                        //move forward a bit
-    	                        case "moveForward":
-    	                                if(leftDriveEncoder.get() > 100 || rightDriveEncoder.get() < -100)
-    	                                {
-    	                                        backRightMotor.set(0);
-    	                                        frontRightMotor.set(0);
-    	                                        backLeftMotor.set(0);
-    	                                        frontLeftMotor.set(0);
-    	                                        state = "pullUp";
-    	                                }
-    	                                else
-    	                                {
-    	                                        backRightMotor.set(-.3);
-    	                                        frontRightMotor.set(-.3);
-    	                                        backLeftMotor.set(.3);
-    	                                        frontLeftMotor.set(.3);
-    	                                }
-    	                        break;
-    	                        //pull robot up
-    	                        case "pullUp":
-    	                                //as you near the bottom slow down
-    	                                if(slideEncoder.get() < lowHeightBoundary - 30)
-    	                                {
-    	                                        //stop at the bottom, if not at bottom then go slow
-    	                                        if(slideEncoder.get() < lowHeightBoundary)
-    	                                        {
-    	                                                lsMotor.set(0);
-    	                                                state = "pullUp";
-    	                                        }
-    	                                        else
-    	                                        {
-    	                                                lsMotor.set(-.2);
-    	                                        }
-    	                                }
-    	                                else
-    	                                {
-    	                                        lsMotor.set(-.5);
-    	                                }
-    	                        
-    	                      // case otherwise: 
-    	                    	   //stop = 1;
-    	                        	break;
-    	                }
-    	        }
-    	}
-    	
-    }
-    
-    public void tankDrive(){
-    	leftPosition = gamePad.getY();
-    	rightPosition = gamePad2.getRawAxis(3);
-    	backLeftMotor.set(leftPosition);
-        backRightMotor.set(rightPosition);
-        frontLeftMotor.set(leftPosition);
-        frontRightMotor.set(rightPosition); 
-    }
-    
+    // {if(gamePad.getRawButton(0)){
+            //set distance to certain numbers for presets
+            //shooterMotor.set(pidControl(Math.sqrt(distance)*DISTANCE_POWER_CONSTANT,currentRPS,currentPower));
+            //leave as error until pidControl is done
+            
+
     /**
      * This function is called periodically during test mode
      */

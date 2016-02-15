@@ -1,130 +1,124 @@
 package org.usfirst.frc.team2643.robot;
 
-
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
-
-
 public class AutoMethods extends Robot{
-        
-public static void moveForward(double distanceTillUp,double speed){
-                rightDriveEncoder.reset();
-                leftDriveEncoder.reset();
-                while(distanceTillUp > leftDriveEncoder.get() || distanceTillUp > rightDriveEncoder.get()){
-                        frontLeftMotor.set(speed);
-                        frontRightMotor.set(speed);
-                        backLeftMotor.set(speed);
-                        backRightMotor.set(speed);
+	
+    public static void setDrive(double leftSpeed,int rightSpeed){
+    	frontRightMotor.set(rightSpeed);
+    	backRightMotor.set(rightSpeed);
+    	backLeftMotor.set(leftSpeed);
+    	frontLeftMotor.set(leftSpeed);
+    }
+    
+    public static void setDrive(double speed){
+    	frontLeftMotor.set(speed);
+        frontRightMotor.set(speed);
+        backLeftMotor.set(speed);
+        backRightMotor.set(speed);
+    }
+    
+public static boolean moveForward(double distanceTillUp,double speed){
+                if(distanceTillUp > leftDriveEncoder.get() || distanceTillUp > rightDriveEncoder.get()){
+                      	setDrive(speed);
+                      	return false;
+                }else{
+                	return true;
                 }
-                frontLeftMotor.set(0);
-                frontRightMotor.set(0);
-                backLeftMotor.set(0);
-                backRightMotor.set(0);
         }
 
-
-        public static void crossDrawbridge() {
-                
-        }
-
-
-        public static void crossPortcullis() {
-                moveHooksDown();
-                moveForward(distanceToDefense,0.4);
-                moveHooksUp();
-                moveForward(distanceToFinishDefense,0.4);
-        }
-
-
-        public static void crossChevalDeFrise() {
-                moveForward(distanceToDefense,0.4);
-                moveHooksDown();
-                moveForward(distanceToFinishDefense,0.4);
-        }
-
-
-        public static void moveHooksDown() {
-                while(hookEncoder.get() > 0){
-                hookMotor.set(-1);
-                }
-                hookMotor.set(0);
+        public static boolean crossChevalDeFrise() {
+        	if(leftDriveEncoder.get() >= 60 && rightDriveEncoder.get() >= 60){
+        		piston.set(false);
+        	}else{
+        		piston.set(true);
+        	}
+			return moveForward(distanceOverDefense,.5);
         }
         
-        public static void moveHooksUp() {
-                while(hookEncoder.get() <  topOfLinearSlide){
-                hookMotor.set(1);
+        public static boolean crossMoat() {
+                return moveForward(distanceOverDefense,0.7);
+        }
+
+
+        public static boolean crossRoughTerrain() {
+        	 return moveForward(distanceOverDefense,0.7);
+        }
+
+
+        public static boolean crossRamparts() {
+        	 return moveForward(distanceOverDefense,0.6);
+        }
+
+
+        public static boolean crossRockWall() {
+        	 return moveForward(distanceOverDefense,0.3);
+        }
+
+
+        public static int turnMove(int shiftStartingPosition, int turnMoveState) {
+               	switch(turnMoveState){
+               	case 0:
+               		if(shiftStartingPosition < 0){
+               			if(turnRight()){
+               				setDrive(1);
+               				resetEncoders();
+               				return 1;
+               			}
+               		}else if(shiftStartingPosition > 0){
+               			if(turnLeft()){
+               				setDrive(1);
+               				resetEncoders();
+               				return 1;
+               			}
+               		}else{
+               			return 1;
+               		}
+               		break;
+               	case 1:
+               		if(moveForward(shiftStartingPosition*distanceBetweenDefenses,1)){
+               			resetEncoders();
+               			return 2;
+               		}
+               		break;
+               	case 2:
+               		if(shiftStartingPosition > 0){
+               			if(turnRight()){
+               				setDrive(1);
+               				resetEncoders();
+               				return 1;
+               			}
+               		}else if(shiftStartingPosition < 0){
+               			if(turnLeft()){
+               				setDrive(1);
+               				resetEncoders();
+               				return 1;
+               			}
+               		}else{
+               			return 1;
+               		}
+               	}
+				return turnMoveState;
+        }
+
+        public static void resetEncoders(){
+        	rightDriveEncoder.reset();
+            leftDriveEncoder.reset();
+        }
+        public static boolean turnRight() {
+                if(turn90Amount < leftDriveEncoder.get() || (-1)*turn90Amount > rightDriveEncoder.get()){
+                       setDrive(1,-1);
+                       return(false);
+                }else{
+                	return(true);
                 }
-                hookMotor.set(0);
         }
 
 
-        public static void crossSallyPort() {
-                
-        }
-
-
-        public static void crossMoat(double distanceOverObject) {
-                moveForward(distanceOverObject,0.7);
-        }
-
-
-        public static void crossRoughTerrain(double distanceOverObject) {
-                moveForward(distanceOverObject,0.7);
-        }
-
-
-        public static void crossRamparts(double distanceOverObject) {
-                moveForward(distanceOverObject,0.6);
-        }
-
-
-        public static void crossRockWall(double distanceOverObject) {
-                moveForward(distanceOverObject,0.2);
-        }
-
-
-        public static void turnMove(int shiftStartingPosition) {
-                if(shiftStartingPosition > 0){
-                        turnRight();
-                        moveForward(distanceBetweenDefenses*shiftStartingPosition,1);
-                        turnLeft();
-                }else if(shiftStartingPosition < 0){
-                        turnLeft();
-                        moveForward((-1)*distanceBetweenDefenses*shiftStartingPosition,1);
-                        turnRight();
-                }
-        }
-
- 
-        public static void turnRight() {
-                rightDriveEncoder.reset();
-                leftDriveEncoder.reset();
-                while(turn90Amount > leftDriveEncoder.get() || (-1)*turn90Amount < rightDriveEncoder.get()){
-                        frontLeftMotor.set(1);
-                        frontRightMotor.set(-1);
-                        backLeftMotor.set(1);
-                        backRightMotor.set(-1);
-                }
-                frontLeftMotor.set(0);
-                frontRightMotor.set(0);
-                backLeftMotor.set(0);
-                backRightMotor.set(0);
-        }
-
-
-        public static void turnLeft() {
-                rightDriveEncoder.reset();
-                leftDriveEncoder.reset();
-                while((-1)*turn90Amount < leftDriveEncoder.get() || turn90Amount > rightDriveEncoder.get()){
-                        frontLeftMotor.set(-1);
-                        frontRightMotor.set(1);
-                        backLeftMotor.set(-1);
-                        backRightMotor.set(1);
-                }
-                frontLeftMotor.set(0);
-                frontRightMotor.set(0);
-                backLeftMotor.set(0);
-                backRightMotor.set(0);
+        public static boolean turnLeft() {
+        	if((-1)*turn90Amount > leftDriveEncoder.get() || turn90Amount < rightDriveEncoder.get()){
+                setDrive(-1,1);
+                return(false);
+         }else{
+         	return(true);
+         }
         }
 }
