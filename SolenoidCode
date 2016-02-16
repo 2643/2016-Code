@@ -1,3 +1,4 @@
+//by vikasni
 	int solenoid1PCM = 1;
 	int solenoid2PCM = 2;
 	Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
