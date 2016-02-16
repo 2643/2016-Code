@@ -5,10 +5,10 @@ public class TeleOp extends Robot{
   
     // add "boolean tankDrive = false" in final
   public static void drive(){
-if(rightStick.getRawButton(3)){ 
+if(gamePad.getRawButton(0)){ //update button numbers
     isTankDrive = false;
   }
-  else if(leftStick.getRawButton(3)){ //update button numbers
+  else if(gamePad.getRawButton(0)){ //update button numbers
     isTankDrive = true;
   }
   else if(isTankDrive){
@@ -19,7 +19,7 @@ if(rightStick.getRawButton(3)){
 }
   
     
-         if(rightStick.getRawButton(2)){
+         if(Joystick.getRawButton(2)){//update button numbers
         	 solenoid1.set(solenoid1State);
         	 solenoid2.set(solenoid2State);
   }
@@ -36,7 +36,7 @@ if(rightStick.getRawButton(3)){
          //put into a method
          
 public static void climberCode(){
-  if(gamePad.getRawButton(2)){
+  if(joystick.getRawButton(2)){ //update button numbers
 			switch(state){
 			
 			case climberState:
@@ -51,7 +51,7 @@ public static void climberCode(){
 				
 			climberStateDown:
 				
-			if(gamepad.getRawButton.get(3)){
+			if(joystick.getRawButton.get(3)){//update button numbers
 				climber.set(-0.5);
 				if(bottomLimitSwitch.get()){
 					climber.set(0.0);
@@ -62,7 +62,7 @@ public static void climberCode(){
 				
 			hookMoveUp:
 				
-				 if(gamePad.getRawButton(4)){
+				 if(joystick.getRawButton(4)){ //update button numbers
 		        	 winchOn=!winchOn;
 				if(winchOn){
 				winch1.set(0.5);
@@ -80,7 +80,7 @@ public static void climberCode(){
 			break;
 			
 		hookMoveDown:
-			 if(gamePad.getRawButton(5)){
+			 if(joystick.getRawButton(5)){ //update button numbers
 	        	 winchDown=!winchDown;
 			if(winchDown){
 			winch1.set(-0.5);
@@ -103,16 +103,16 @@ public static void climberCode(){
 
         
     public static void tankDrive(){
-    	leftPosition = leftStick.getY();
-    	rightPosition = rightStick.getY();
+    	leftPosition = gamePad.getY();
+    	rightPosition = gamePad.getY();
     	backLeftMotor.set(-leftPosition);
         backRightMotor.set(rightPosition);
         frontLeftMotor.set(-leftPosition);
         frontRightMotor.set(rightPosition); 
     }
      public static void arcadeDrive() {
-    	   double yPosition = rightStick.getY();
-    	   double xPosition = rightStick.getX();
+    	   double yPosition = gamePad.getY();
+    	   double xPosition = gamePad.getX();
     	    
     	    frontRightMotor.set(yPosition-xPosition);
     	    backRightMotor.set(yPosition-xPosition);
