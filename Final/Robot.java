@@ -1,4 +1,8 @@
 
+/*
+Vikasni: starting positions
+Justin Case: port numbers and solenoids
+*/
 package org.usfirst.frc.team2643.robot;
 //imports here 
 import java.lang.Math;
