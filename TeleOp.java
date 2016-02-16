@@ -1,5 +1,11 @@
+/*Authors:
+*Adley: Debugging
+*Vikasni: Debugging
+*Yvonne: Original Author
+*Erika: stared at Yvonne while she made it
+*/
+
 package org.usfirst.frc.team2643.robot;
-//Debugged by Vikansi & Adley 
 
 public class TeleOp extends Robot{
   
