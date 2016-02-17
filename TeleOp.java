@@ -1,7 +1,7 @@
 /*Authors:
-*Adley: Debugging
-*Oskar: Debugging
-*Vikasni: Debugging
+*Adley: Debugger
+*Oskar: Debugger
+*Vikasni: Debugger
 *Yvonne: Original Author
 *Erika: stared at Yvonne while she made it
 */
