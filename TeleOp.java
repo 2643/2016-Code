@@ -35,12 +35,12 @@ if(gamePad.getRawButton(10)){ //update button numbers
          
   public static void climber() {
 	  if(dontStartClimbing.get() > 115){
-		if(operatorStick.getRawButton(3) && !topLimitSwitch.get()){
+		if(operatorGamePad.getRawButton(3) && !topLimitSwitch.get()){
 			climbArmMotor.set(0.5);
 		}else if(!gamePad.getRawButton(3)){
 				climbArmMotor.set(0.0);
 		}
-		if(operatorStick.getRawButton(2)){
+		if(operatorGamePad.getRawButton(2)){
 			//arm retracts while the winch goes up
 			startCounting = true;
 			if(solenoidClock.get() > 2){
