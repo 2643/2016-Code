@@ -1,7 +1,7 @@
 /*Authors:
-*Adley: Debugger
-*Oskar: Debugger
-*Vikasni: Debugger
+*Adley: Debugging
+*Oskar: Debugging
+*Vikasni: Debugging
 *Yvonne: Original Author
 *Erika: stared at Yvonne while she made it
 */
@@ -120,4 +120,4 @@ public static void opticSensorTset() {
 }
 }
 
-    
+    	
