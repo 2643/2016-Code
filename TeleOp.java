@@ -3,6 +3,7 @@
 *Oskar: Debugging
 *Vikasni: Debugging
 *Yvonne: Original Author
+*Niko: Rewrote Climber
 *Erika: stared at Yvonne while she made it
 */
 
