@@ -18,10 +18,10 @@ public class TeleOp extends Robot{
 	
     // add "boolean tankDrive = false" in final
   public static void drive(){
-if(gamePad.getRawButton(0)){ //update button numbers
+if(gamePad.getRawButton(10)){ //update button numbers
     isTankDrive = false;
   }
-  else if(gamePad.getRawButton(0)){ //update button numbers
+  else if(gamePad.getRawButton(9)){ //update button numbers
     isTankDrive = true;
   }
   else if(isTankDrive){
