@@ -4,13 +4,10 @@ Vikasni: starting positions
 Justin Case: port numbers and solenoids
 */
 package org.usfirst.frc.team2643.robot;
-//imports here 
-import java.lang.Math;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
@@ -31,36 +28,32 @@ public class Robot extends IterativeRobot {
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;    
+    //smartboard thing, probably needs to be changed
     int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
-    //doubles here 
-    //change numbers after testing
-   // static boolean isTankDrive = false;
-    static double turn90Amount = 400;
+    //change these numbers after testing
     static double distanceBetweenDefenses = 200;
-    static double distanceToDefense = 300;
-    static double distanceToFinishDefense = 100;
+    static double distanceOverDefense = 400;
+    static double distanceUntillInfront = 100;
+    static double turn90Amount = 400;
+    //static variables which dont need to be changed
+    //doubles
+    static double currentPower = 0;
+    static double currentRPS = 0;
     static double leftPosition = 0;
     static double rightPosition = 0;
-    static double distanceUntillInfront = 100;
-    static double distanceOverDefense = 400;
-    final double DISTANCE_POWER_CONSTANT = 0;
+    //ints
+    static int autoState = 0;
+    static final int cross = 2;
+    static final int finishedState = 3;
+    static final int moveForward = 1;
+    static final int turnMove = 0;
     static int turnMoveState = 0;
-    // static doubles
-    static double currentRPS = 0;
-    static double currentPower = 0;
-    static double distance = 1;
+    //booleans
+	static boolean alreadyPressed = false;
     static boolean finished = false;
     static boolean isTankDrive = false;
-    static final int turnMove = 0;
-    static final int moveForward = 1;
-    static final int cross = 2;
-    static int autoState = moveForward;
-    static final int finishedState = 3;
-    static boolean solenoidToggleIfAlreadyPressed = false;
-	static int state;
-    //variables here 
-    static Solenoid piston = new Solenoid(2);
-    //Drive Motors
+	static boolean startCounting = false;
+    //drive Motors
     static Talon backLeftMotor = new Talon(3);
     static Talon backRightMotor = new Talon(1);
     static Talon frontLeftMotor = new Talon(2);
@@ -68,55 +61,33 @@ public class Robot extends IterativeRobot {
     //shooter motor stuff
     static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
-    //climb winch motors
+    //climb motors
+    static Victor climbArmMotor = new Victor(6);
     static Victor winch1 = new Victor(7);
     static Victor winch2 = new Victor(8);
     static Victor winch3 = new Victor(9);
-    
-    static Victor climbArmMotor = new Victor(6);
     //encoders
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
     static Encoder shooterEncoder = new Encoder(4,5);
-    //joysticks
+    //Joysticks
     static Joystick gamePad = new Joystick(0);
     static Joystick operatorStick = new Joystick(1);
-    
-    
+    //Timers
     static Timer clock = new Timer();
-    static DigitalInput  ballOpticSensor = new DigitalInput(8);
-	public static int shiftSolenoid1PCM = 0;
-    //Solenoids
-   static Solenoid  shiftSolenoid1 = new Solenoid(shiftSolenoid1PCM);
-   public static int shiftSolenoid2PCM = 1;
-    static Solenoid  shiftSolenoid2 = new Solenoid(shiftSolenoid2PCM);
-    static Solenoid climbArmSolenoid = new Solenoid(3);
-   static boolean alreadyPressed;
-   static boolean solenoid1State = shiftSolenoid1.get();
-	static boolean solenoid2State = shiftSolenoid2.get();
-	//climber
 	static Timer dontStartClimbing = new Timer();
-	static boolean startCounting = false;
 	static Timer solenoidClock = new Timer();
-	static int climbArmMotorState;
-	static int  climbArmMotorStateDown= 1;
-	static int hookMoveUp=2;
-	static int hookMoveDown = 3;
- static boolean winchOn;
-	
-    //RobotDrive drive = new RobotDrive( frontLeftMotor,  backLeftMotor,  frontRightMotor,  backRightMotor);
-    
-    
-    
-    
-   static  DigitalInput topLimitSwitch = new DigitalInput(6);
-   static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
-    
-   
-    
-    
-   
+    //digital inputs
+    static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
+    static DigitalInput ballOpticSensor = new DigitalInput(8);
+    static  DigitalInput topLimitSwitch = new DigitalInput(6);
+    //Solenoids
+    static Solenoid climbArmSolenoid = new Solenoid(3);
+    static Solenoid piston = new Solenoid(2);
+    static Solenoid shiftSolenoid1 = new Solenoid(0);
+    static Solenoid shiftSolenoid2 = new Solenoid(1);
     //Declaration of variables^
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -224,3 +195,24 @@ public class Robot extends IterativeRobot {
     
     
     
+    
+    //*calculate current RPS
+    
+    //ADD THIS BACK WHEN PID CONTROL IS DONE 
+
+    // {if(gamePad.getRawButton(0)){
+            //set distance to certain numbers for presets
+            //shooterMotor.set(pidControl(Math.sqrt(distance)*DISTANCE_POWER_CONSTANT,currentRPS,currentPower));
+            //leave as error until pidControl is done
+            
+
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    
+    }
+    
+}
+
+//add limit switch and encoder on the climber 
