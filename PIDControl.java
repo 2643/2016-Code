@@ -47,11 +47,8 @@ public class Robot extends IterativeRobot {
     static Timer rpsTimer = new Timer();
     static Timer timer = new Timer();
     static Joystick stick1 = new Joystick(0);
-    static Talon shooterMotor = new Talon(8);
-    static Talon frontLeftMotor = new Talon(2);
-    static Talon backLeftMotor = new Talon(3);
-    static Encoder shooterEncoder = new Encoder(6,7);
-    static Encoder leftEncoder = new Encoder(0,1);
+    static Victor shooterMotor = new Victor(4);
+    static Encoder shooterEncoder = new Encoder(4,5);
     final int powerChangingState = 0;
     final int waitingState = 1;
     
@@ -71,7 +68,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Auto choices", chooser);
         //Default code
        
-        leftEncoder.reset();
+        shooterEncoder.reset();
        
        
     }
@@ -170,10 +167,10 @@ public class Robot extends IterativeRobot {
         while(isOperatorControl() && isEnabled()){
            if(lastTime <= System.currentTimeMillis() + 500){
               if(rpsTimer.get() > 0.5){
-                currentRPS = Math.abs(leftEncoder.get()*2.0/255.0);
+                currentRPS = Math.abs(shooterEncoder.get()*2.0/255.0);
                 System.out.println(currentRPS);
                 rpsTimer.reset();
-                leftEncoder.reset();
+                shooterEncoder.reset();
                }
                 //Gets revolutions every second
            
