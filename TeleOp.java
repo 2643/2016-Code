@@ -8,8 +8,13 @@
 
 package org.usfirst.frc.team2643.robot;
 
+
 public class TeleOp extends Robot{
   
+	public static void intake(){
+		   intakeMotor.set(operatorStick.getY());
+	}
+	
     // add "boolean tankDrive = false" in final
   public static void drive(){
 if(gamePad.getRawButton(0)){ //update button numbers
@@ -23,17 +28,11 @@ if(gamePad.getRawButton(0)){ //update button numbers
   }else{
     arcadeDrive();
   }
-}
-  
-    
-         if(Joystick.getRawButton(2)){//update button numbers
-        	 solenoid1.set(solenoid1State);
-        	 solenoid2.set(solenoid2State);
   }
+  
     	/*int solenoid1PCM = 1;
     	int solenoid2PCM = 2;
-    	boolean solenoid1State = solenoid1.get();
-    	boolean solenoid2State = solenoid2.get();
+    	
     	solenoid1S
     	Add these in final
     	*/
@@ -42,71 +41,39 @@ if(gamePad.getRawButton(0)){ //update button numbers
    
          //put into a method
          
-public static void climberCode(){
-  if(joystick.getRawButton(2)){ //update button numbers
-			switch(state){
-			
-			case climberState:
-				
-					climber.set(0.5);
-				if(topLimitSwitch.get()){
-					climber.set(0.0);
-					
-					state = climberStateDown;
-				}
-				break;
-				
-			climberStateDown:
-				
-			if(joystick.getRawButton.get(3)){//update button numbers
-				climber.set(-0.5);
-				if(bottomLimitSwitch.get()){
-					climber.set(0.0);
-					state = hookMoveUp;
+  public static void climber() {
+	  if(dontStartClimbing.get() > 115){
+		if(operatorStick.getRawButton(2) && !topLimitSwitch.get()){
+			climbArmMotor.set(0.5);
+		}else if(!gamePad.getRawButton(3)){
+				climbArmMotor.set(0.0);
+		}
+		if(operatorStick.getRawButton(3)){
+			//arm retracts while the winch goes up
+			startCounting = true;
+			if(solenoidClock.get() > 2){
+				setWinches(0.5);
+			}else{
+				climbArmSolenoid.set(false);
 			}
+			if(bottomLimitSwitch.get()){
+				climbArmMotor.set(0.0);
+			}else{
+				climbArmMotor.set(-0.5);
 			}
-				break;
-				
-			hookMoveUp:
-				
-				 if(joystick.getRawButton(4)){ //update button numbers
-		        	 winchOn=!winchOn;
-				if(winchOn){
-				winch1.set(0.5);
-				winch2.set(0.5);
-				winch3.set(0.5);
-				state = hookMoveDown;
-				}
-				else{
-					winch1.set(0.0);
-					winch2.set(0.0);
-					winch3.set(0.0);
-					state = hookMoveDown;
-				}
-				 }
-			break;
-			
-		hookMoveDown:
-			 if(joystick.getRawButton(5)){ //update button numbers
-	        	 winchDown=!winchDown;
-			if(winchDown){
-			winch1.set(-0.5);
-			winch2.set(0.5);
-			winch3.set(0.5);
-			
-			}
-			else{
-				winch1.set(0.0);
-				winch2.set(0.0);
-				winch3.set(0.0);
-				
-			}
+		}else{
+			setWinches(0.0);
+		}
+		if(!startCounting){
+			solenoidClock.reset();
+		}
+	  }
 	}
-			break;
-
-}
-
-}
+	public static void setWinches(double speed){
+		winch1.set(speed);
+		winch2.set(speed);
+		winch3.set(speed);
+	}
 
         
     public static void tankDrive(){
@@ -128,7 +95,29 @@ public static void climberCode(){
 }
     
 
+public static void shiftGears(){
+	
+		
+		if(gamePad.getRawButton(2) && !alreadyPressed){
+        	shiftSolenoid1.set(!shiftSolenoid1.get());
+        	shiftSolenoid2.set(!shiftSolenoid2.get());
+        	alreadyPressed = true;
+       	 }
+       	 if(!gamePad.getRawButton(2)){
+		alreadyPressed = false;       	 
+       	 }
 
+         
+}
 
+public static void opticSensorTset() {
+	if(ballOpticSensor.get()) {
+		System.out.println("No ball");
+	}
+	else {
+		System.out.println("Ball");
+	}
+}
+}
 
-]
+    
