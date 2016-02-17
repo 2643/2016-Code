@@ -8,7 +8,7 @@ package org.usfirst.frc.team2643.robot;
 public class AutoMethods extends Robot{
 	
 	//set drive sets the two sides to a speed indep.
-    public static void setDrive(double leftSpeed,int rightSpeed){
+    public static void setDrive(double leftSpeed,double rightSpeed){
     	frontRightMotor.set(rightSpeed);
     	backRightMotor.set(rightSpeed);
     	backLeftMotor.set(leftSpeed);
