@@ -118,7 +118,7 @@ public class Robot extends IterativeRobot {
     	if(desiredPower > 0){
     		if(currentPower > desiredPower){
     			System.out.println("1");
-    			//do nothing
+    			//Do not increment power
     		}
     		else if(differenceInPower >= powerIncrement){
     			//Increments power to max power increment
@@ -128,75 +128,44 @@ public class Robot extends IterativeRobot {
     		else{
     			//Increases power to desired power
     			currentPower += differenceInPower;
-    			// System.out.println("3");
       	 }
     	}
     if(desiredPower < 0){
     	if(currentPower < desiredPower){
-			System.out.println("1");
-			//do nothing
+			//Do not decrement power
 		}
 		else if(differenceInPower >= powerIncrement){
-			//Increments power to max power increment
-			//System.out.println("2");
+			//Decrements power to max power increment
 			currentPower -= powerIncrement;
 		}
 		else{
-			//Increases power to desired power
+			//Decreases power to desired power
 			currentPower -= differenceInPower;
-			// System.out.println("3");
   	 }
     }
     }
-   /* public void pidControl(){
-       
-       
-           
-    }*/
+
    
     /**
      * This function is called periodically during operator control
      */
    
     public void teleopPeriodic() {
-       //System.out.println("1");
+
         rpsTimer.start();
         pidTimer.start();
-       //System.out.println("2");
+
         long lastTime = System.currentTimeMillis();
         while(isOperatorControl() && isEnabled()){
-           if(lastTime <= System.currentTimeMillis() + 500){
+        	//Gets revolutions every second
+            if(lastTime <= System.currentTimeMillis() + 500){
               if(rpsTimer.get() > 0.5){
                 currentRPS = Math.abs(shooterEncoder.get()*2.0/255.0);
                 System.out.println(currentRPS);
                 rpsTimer.reset();
                 shooterEncoder.reset();
                }
-                //Gets revolutions every second
-           
-           
-                //set distance to certain numbers for presets
-               /* if(stick1.getRawButton(1)){
-                    is1Preset = !is1Preset;
-                    is2Preset = false;
-                }
-                else if(stick1.getRawButton(2)){
-                    is2Preset = !is2Preset;
-                    is1Preset = false;
-                }
-               
-                if(is1Preset){
-                    desiredRPS = preset1;
-                }
-                else if(is2Preset){
-                    desiredRPS = preset2;
-                }
-                else{
-                    desiredRPS = 0;
-                }*/
-           
                 //PID Control
-                
                 desiredRPS = 7.5;
                 desiredPower = toPower(desiredRPS);
                
@@ -208,9 +177,7 @@ public class Robot extends IterativeRobot {
                    
                         double powerDifference = Math.abs(desiredPower - currentPower);
                         incrementPower(powerDifference);
-                        frontLeftMotor.set(currentPower);
-                        backLeftMotor.set(currentPower);
-                      //  System.out.println("Incremented");
+                        shooterMotor.set(currentPower);
                         state = waitingState;
                         break;
                    
@@ -219,7 +186,6 @@ public class Robot extends IterativeRobot {
                         if(pidTimer.get() >= (speedUpWait + secondWait)){
                             desiredPower = (desiredRPS/currentRPS)*currentPower;
                             //calculates desired RPS
-                       //   System.out.println("Done waiting");
                             state = powerChangingState;
                         }
                         break;
