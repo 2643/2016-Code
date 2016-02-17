@@ -44,21 +44,20 @@ public class Robot extends IterativeRobot {
     static double distanceUntillInfront = 100;
     static double distanceOverDefense = 400;
     final double DISTANCE_POWER_CONSTANT = 0;
-    static final int turnMoveState = 0;
+    static int turnMoveState = 0;
     // static doubles
     static double currentRPS = 0;
     static double currentPower = 0;
     static double distance = 1;
     static boolean finished = false;
     static boolean isTankDrive = false;
-    
-    static final int turnMoveState = 0;
     static final int turnMove = 0;
     static final int moveForward = 1;
     static final int cross = 2;
     static int autoState = moveForward;
     static final int finishedState = 3;
     static boolean solenoidToggleIfAlreadyPressed = false;
+	static int state;
     //variables here 
     static Solenoid piston = new Solenoid(2);
     //Drive Motors
@@ -69,10 +68,11 @@ public class Robot extends IterativeRobot {
     //shooter motor stuff
     static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
-    //climb motors
-    static Victor climbMotor1 = new Victor(7);
-    static Victor climbMotor2 = new Victor(8);
-    static Victor climbMotor3 = new Victor(9);
+    //climb winch motors
+    static Victor winch1 = new Victor(7);
+    static Victor winch2 = new Victor(8);
+    static Victor winch3 = new Victor(9);
+    
     static Victor climbArmMotor = new Victor(6);
     //encoders
     static Encoder leftDriveEncoder  = new Encoder(0,1);
@@ -80,22 +80,37 @@ public class Robot extends IterativeRobot {
     static Encoder shooterEncoder = new Encoder(4,5);
     //joysticks
     static Joystick gamePad = new Joystick(0);
-    static Joystick gamePad2 = new Joystick(1);
-    static Joystick gamePad = new Joystick(0);
-    static Joystick gamePad2 = new Joystick(1);
+    static Joystick operatorStick = new Joystick(1);
+    
     
     static Timer clock = new Timer();
-    DigitalInput  ballOpticSensor = new DigitalInput(4);
+    static DigitalInput  ballOpticSensor = new DigitalInput(8);
+	public static int shiftSolenoid1PCM = 0;
     //Solenoids
-   Solenoid  solenoid1 = new Solenoid(solenoid1PCM);
-    Solenoid  solenoid2 = new Solenoid(solenoid2PCM);
+   static Solenoid  shiftSolenoid1 = new Solenoid(shiftSolenoid1PCM);
+   public static int shiftSolenoid2PCM = 1;
+    static Solenoid  shiftSolenoid2 = new Solenoid(shiftSolenoid2PCM);
+    static Solenoid climbArmSolenoid = new Solenoid(3);
+   static boolean alreadyPressed;
+   static boolean solenoid1State = shiftSolenoid1.get();
+	static boolean solenoid2State = shiftSolenoid2.get();
+	//climber
+	static Timer dontStartClimbing = new Timer();
+	static boolean startCounting = false;
+	static Timer solenoidClock = new Timer();
+	static int climbArmMotorState;
+	static int  climbArmMotorStateDown= 1;
+	static int hookMoveUp=2;
+	static int hookMoveDown = 3;
+ static boolean winchOn;
+	
     //RobotDrive drive = new RobotDrive( frontLeftMotor,  backLeftMotor,  frontRightMotor,  backRightMotor);
     
     
     
     
-    
-    DigitalInput slideBottomLimitSwitch = new DigitalInput(0);
+   static  DigitalInput topLimitSwitch = new DigitalInput(6);
+   static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
     
    
     
@@ -192,74 +207,20 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit() {
     	clock.start();
+    	dontStartClimbing.start();
       }
     
     
    
     
     public void teleopPeriodic() {
-    	
-    	if(ballOpticSensor.get()) {
-    		System.out.println("No ball");
-    	}
-    	else {
-    		System.out.println("Ball");
-    	
-    	
-    	}
-    	
+    	TeleOp.opticSensorTset();
     	TeleOp.drive();
+    	TeleOp.intake();
+    	TeleOp.shiftGears();
+    	TeleOp.climber();
     	
-	
-    
-    
-    public void teleopPeriodic() {
-
-         //add already pressed boolean in robot
-         if(gamePad.getRawButton(2) && !alreadyPressed){
-        	solenoid1.set(!solenoid1.get());
-        	solenoid2.set(!solenoid2.get());
-        	alreadyPressed = true;
-       	 }
-       	 if(!gamePad.getRawButton(2)){
-		alreadyPressed = false;       	 
-       	 }
-
-         }
-    	
-    	
-    	//TeleOp.intake();
-    }
-    
-   intakeMotor.set(gamePad.getY());
-   
-     if(gamePad.getRawButton(5))
-   {
-   	shooterMotor.set(-1);
-   }
-    else{
-    	shooterMotor.set(0);
-    }
     }
     
     
-    //*calculate current RPS
     
-    //ADD THIS BACK WHEN PID CONTROL IS DONE 
-
-    // {if(gamePad.getRawButton(0)){
-            //set distance to certain numbers for presets
-            //shooterMotor.set(pidControl(Math.sqrt(distance)*DISTANCE_POWER_CONSTANT,currentRPS,currentPower));
-            //leave as error until pidControl is done
-            
-
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
-    }
-    
-}
-
-//add limit switch and encoder on the climber 
