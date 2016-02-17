@@ -5,8 +5,6 @@
 
 package org.usfirst.frc.team2643.robot;
 
-import edu.wpi.first.wpilibj.Encoder;
-
 public class AutoMethods extends Robot{
 	
 	//set drive sets the two sides to a speed indep.
