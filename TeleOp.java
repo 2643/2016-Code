@@ -31,15 +31,6 @@ if(gamePad.getRawButton(0)){ //update button numbers
   }
   }
   
-    	/*int solenoid1PCM = 1;
-    	int solenoid2PCM = 2;
-    	
-    	solenoid1S
-    	Add these in final
-    	*/
-    	
-    	
-   
          //put into a method
          
   public static void climber() {
