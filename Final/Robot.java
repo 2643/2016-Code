@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
     static Encoder shooterEncoder = new Encoder(4,5);
     //Joysticks
     static Joystick gamePad = new Joystick(0);
-    static Joystick operatorStick = new Joystick(1);
+    static Joystick operatorGamePad = new Joystick(1);
     //Timers
     static Timer clock = new Timer();
 	static Timer dontStartClimbing = new Timer();
