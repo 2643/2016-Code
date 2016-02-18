@@ -113,3 +113,34 @@ public static void opticSensorTset() {
 }
 
     	
+public static void visionProcess(){
+	  {
+    	
+        Scheduler.getInstance().run();
+ 
+        while(isOperatorControl() && isEnabled())
+        {      	 
+        	for (double width : table.getNumberArray("myContoursReport/width", new double[0])) 
+        	{
+        		switch(state)
+                {
+                    case 0:
+                        double[] widths = table.getNumberArray("myContoursReport/width", new double[0]);
+                        temp = 0;
+                        for(int i = 0;i < widths.length; i++)
+                        {
+                            if(widths[i] > widths[temp])
+                            {
+                                temp = i;
+                            }
+                        }
+
+                        System.out.println("width: " + widths[temp] + "\ndistance: " + ((136.0/118.0)*(1.08*(20*320)/widths[temp])));
+                        //Timer.delay(2);
+                }
+        	}
+        }
+    }
+}
+
+}
