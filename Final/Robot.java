@@ -22,31 +22,6 @@ import edu.wpi.first.wpilibj.Solenoid;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	 Command autonomousCommand;
-    SendableChooser chooser;
-   
-    //NetworkTable table;
-    int session;
-    Image frame;
-    AxisCamera camera;
-    
-   
-    int state = 0;
- 
-    double[] defaultValue = new double [0];
-    double[] areas;
-    int temp = 0;
-    double[] centerXs;
-    double centerX;
-    double width;
-    double distance;
-    boolean position = false;
-    double MAGIC_DISTANCE_NUMBER = 1.08;
-    double MAGIC_AREA_NUMBER = 1.429;
- 
-    //NetworkTable grip = NetworkTable.getTable("GRIP/myContoursReport");
-	NetworkTable table = NetworkTable.getTable("GRIP");
-
 	
 
     final String defaultAuto = "Default";
@@ -54,7 +29,8 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;    
     //smartboard thing, probably needs to be changed
-    int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)-2.5)*2);
+    int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)));
+    int shiftDefensePosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)));
     //change these numbers after testing
     static double distanceBetweenDefenses = 200;
     static double distanceOverDefense = 400;
@@ -69,12 +45,15 @@ public class Robot extends IterativeRobot {
     //ints
     static int autoState = 0;
     static final int cross = 2;
-    static final int finishedState = 3;
+    static final int toShootState = 3;
     static final int moveForward = 1;
     static final int turnMove = 0;
+    static final int ShootState = 4;
     static int turnMoveState = 0;
+    
     //booleans
-	static boolean alreadyPressed = false;
+    static boolean alreadyPressed = false;
+	static boolean alreadyPressed2 = false;
     static boolean finished = false;
     static boolean isTankDrive = false;
 	static boolean startCounting = false;
@@ -97,7 +76,7 @@ public class Robot extends IterativeRobot {
     static Encoder shooterEncoder = new Encoder(4,5);
     //Joysticks
     static Joystick gamePad = new Joystick(0);
-    static Joystick operatorGamePad = new Joystick(1);
+    static Joystick operatorStick = new Joystick(1);
     //Timers
     static Timer clock = new Timer();
 	static Timer dontStartClimbing = new Timer();
@@ -125,19 +104,6 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
-       
-        SmartDashboard.putData("Auto mode", chooser);
-        
-        try 
-        {
-            new ProcessBuilder("/home/lvuser/grip").inheritIO().start();
-        } 
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     }
     
         /**
@@ -191,7 +157,7 @@ public class Robot extends IterativeRobot {
 			//pick on db slider
 			System.out.println("cross");
 			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
-             	finished = AutoMethods.crossChevalDeFrise();
+             	//finished = AutoMethods.crossChevalDeFrise();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 1){
             	finished = AutoMethods.crossMoat();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 2){   
@@ -203,13 +169,21 @@ public class Robot extends IterativeRobot {
            }
            //once finished, then go to the finished state
 		if(finished){
-			autoState = finishedState;
+			autoState = toShootState;
 		}
 		break;
-		case finishedState:
+		
+		case toShootState:
+			
 			//here put the shooting code that goes up to the shooting position and shoots 
-	    AutoMethods.setDrive(0);
+	    AutoMethods.turnMove(shiftDefensePosition, shiftDefensePosition);
+	    
+    	autoState = ShootState;
+    	
 			break;
+		case ShootState:
+			AutoMethods.setDrive(0);
+		
 	}
     }
 
@@ -248,9 +222,3 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    
-    }
-    
-}
-
-//add limit switch and encoder on the climber 
