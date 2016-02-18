@@ -69,7 +69,7 @@ if(gamePad.getRawButton(10)){ //update button numbers
         
     public static void tankDrive(){
     	leftPosition = gamePad.getY();
-    	rightPosition = gamePad.getY();
+    	rightPosition = gamePad.getRawAxis(3);
     	backLeftMotor.set(-leftPosition);
         backRightMotor.set(rightPosition);
         frontLeftMotor.set(-leftPosition);
