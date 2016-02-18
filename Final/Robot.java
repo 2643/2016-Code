@@ -22,6 +22,31 @@ import edu.wpi.first.wpilibj.Solenoid;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	 Command autonomousCommand;
+    SendableChooser chooser;
+   
+    //NetworkTable table;
+    int session;
+    Image frame;
+    AxisCamera camera;
+    
+   
+    int state = 0;
+ 
+    double[] defaultValue = new double [0];
+    double[] areas;
+    int temp = 0;
+    double[] centerXs;
+    double centerX;
+    double width;
+    double distance;
+    boolean position = false;
+    double MAGIC_DISTANCE_NUMBER = 1.08;
+    double MAGIC_AREA_NUMBER = 1.429;
+ 
+    //NetworkTable grip = NetworkTable.getTable("GRIP/myContoursReport");
+	NetworkTable table = NetworkTable.getTable("GRIP");
+
 	
 
     final String defaultAuto = "Default";
