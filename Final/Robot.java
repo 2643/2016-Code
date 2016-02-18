@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
     static final int toShootState = 3;
     static final int moveForward = 1;
     static final int turnMove = 0;
-    static final int ShootState = 4;
+    static final int shootState = 4;
     static int turnMoveState = 0;
     
     //booleans
@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot {
 			if(turnMoveState > 2){
 				AutoMethods.resetEncoders();
 				autoState = moveForward;
-				
+				turnMoveState = 0;
 			}
 			break;
 			
@@ -174,17 +174,20 @@ public class Robot extends IterativeRobot {
 		break;
 		
 		case toShootState:
-			
-			//here put the shooting code that goes up to the shooting position and shoots 
-	    AutoMethods.turnMove(shiftDefensePosition, shiftDefensePosition);
-	    
-    	autoState = ShootState;
-    	
+			turnMoveState = AutoMethods.turnMove(shiftDefensePosition,turnMoveState);
+			if(turnMoveState > 2){
+				AutoMethods.resetEncoders();
+				autoState = shootState;
+				turnMoveState = 0;
+			}
 			break;
-		case ShootState:
+		case shootState:
 			AutoMethods.setDrive(0);
-		
+			
+			
+		break;
 	}
+   
     }
 
 
@@ -196,7 +199,7 @@ public class Robot extends IterativeRobot {
     
    
     
-    public void teleopPeriodic() {
+    /*public void teleopPeriodic() {
     	TeleOp.opticSensorTset();
     	TeleOp.drive();
     	TeleOp.intake();
@@ -222,3 +225,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+    
+    }
+    
+}
+
+//add limit switch and encoder on the climber 
