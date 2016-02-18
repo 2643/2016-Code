@@ -1,0 +1,10 @@
+public static void piston(){
+		if(gamePad.getRawButton() && !alreadyPressed2){
+        	piston.set(!piston.get());
+        	alreadyPressed2 = true;
+       	 }
+       	 if(!gamePad.getRawButton()){
+		alreadyPressed2 = false;       	 
+       	 }
+  }
+  //add "boolean alreadyPressed2 = false;" in robot.java under alreadyPressed
