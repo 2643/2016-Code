@@ -29,67 +29,68 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;    
     //smartboard thing, probably needs to be changed
-    int shiftStartingPosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)));
-    int shiftDefensePosition = (int) ((SmartDashboard.getNumber("DB/Slider 1",0)));
+    double shiftStartingPosition;
     //change these numbers after testing
-    static double distanceBetweenDefenses = 200;
+    static double distanceBetweenDefenses = 500;
     static double distanceOverDefense = 400;
-    static double distanceUntillInfront = 100;
-    static double turn90Amount = 400;
+    static double distanceUntillInfront = 1000;
+    static double turn90Amount = 140;
     //static variables which dont need to be changed
     //doubles
-    static double currentPower = 0;
-    static double currentRPS = 0;
+   // static double currentPower = 0;
+    //static double currentRPS = 0;
     static double leftPosition = 0;
     static double rightPosition = 0;
     //ints
     static int autoState = 0;
     static final int cross = 2;
+    static final int finishedState = 4;
     static final int toShootState = 3;
     static final int moveForward = 1;
     static final int turnMove = 0;
-    static final int shootState = 4;
     static int turnMoveState = 0;
-    
     //booleans
     static boolean alreadyPressed = false;
 	static boolean alreadyPressed2 = false;
     static boolean finished = false;
-    static boolean isTankDrive = false;
+    
 	static boolean startCounting = false;
+	static boolean isTankDrive = false;
     //drive Motors
     static Talon backLeftMotor = new Talon(3);
-    static Talon backRightMotor = new Talon(1);
+    static Talon backRightMotor = new Talon(0);
     static Talon frontLeftMotor = new Talon(2);
-    static Talon frontRightMotor = new Talon(0);
+    static Talon frontRightMotor = new Talon(1);
     //shooter motor stuff
-    static Victor shooterMotor = new Victor(4);
+   // static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
     //climb motors
-    static Victor climbArmMotor = new Victor(6);
-    static Victor winch1 = new Victor(7);
-    static Victor winch2 = new Victor(8);
-    static Victor winch3 = new Victor(9);
+   // static Victor climbArmMotor = new Victor(6);
+    //static Victor winch1 = new Victor(7);
+   // static Victor winch2 = new Victor(8);
+  //  static Victor winch3 = new Victor(9);
     //encoders
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    static Encoder shooterEncoder = new Encoder(4,5);
+    //static Encoder shooterEncoder = new Encoder(4,5);
     //Joysticks
     static Joystick gamePad = new Joystick(0);
     static Joystick operatorGamePad = new Joystick(1);
     //Timers
-    static Timer clock = new Timer();
+    /*static Timer clock = new Timer();
 	static Timer dontStartClimbing = new Timer();
 	static Timer solenoidClock = new Timer();
+	*/
     //digital inputs
-    static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
+   /* static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
     static DigitalInput ballOpticSensor = new DigitalInput(8);
     static  DigitalInput topLimitSwitch = new DigitalInput(6);
+    */
     //Solenoids
-    static Solenoid climbArmSolenoid = new Solenoid(3);
-    static Solenoid piston = new Solenoid(2);
-    static Solenoid shiftSolenoid1 = new Solenoid(0);
-    static Solenoid shiftSolenoid2 = new Solenoid(1);
+   // static Solenoid climbArmSolenoid = new Solenoid(3);
+    //static Solenoid piston = new Solenoid(2);
+    public static Solenoid shiftSolenoid1 = new Solenoid(0);
+    public static Solenoid shiftSolenoid2 = new Solenoid(1);
     //Declaration of variables^
 	
     /**
@@ -97,7 +98,6 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	System.out.println("1");
         SmartDashboard.putNumber("DB/Slider 0" , 0.0);
         SmartDashboard.putNumber("DB/Slider 1" , 0.0);
         chooser = new SendableChooser();
@@ -116,8 +116,19 @@ public class Robot extends IterativeRobot {
          * If using the SendableChooser make sure to add them to the chooser code above as well.
          */
     public void autonomousInit() {
-    	System.out.println("2");
+    		AutoMethods.resetEncoders();
+    		autoState = 0;
+    		finished = false;
             autoSelected = (String) chooser.getSelected();
+            
+            for (double i = 0;i <= 5;i += .01){
+    			if(SmartDashboard.getNumber("DB/Slider 1",0) < i + .005 && (SmartDashboard.getNumber("DB/Slider 1",0) > i - .005)){
+    				shiftStartingPosition = ((int)((i*100)+.5))/100.0;
+    				shiftStartingPosition -= 2.5;
+    				shiftStartingPosition *= 2;
+    				break;
+    			}
+    		}
 //                autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
                 System.out.println("Auto selected: " + autoSelected);
                 AutoMethods.resetEncoders();
@@ -130,14 +141,13 @@ public class Robot extends IterativeRobot {
      */
      
     public void autonomousPeriodic() {
-    
 //state machine here
+    	System.out.println("AutoState: " + autoState + "\nturnMoveState: " + turnMoveState);
     	switch(autoState){
 		case turnMove: 
 			//this makes the robot turn and go  to the defense place 
 			turnMoveState = AutoMethods.turnMove(shiftStartingPosition,turnMoveState);
 			if(turnMoveState > 2){
-				AutoMethods.resetEncoders();
 				turnMoveState = 0;
 				autoState = moveForward;
 			}
@@ -145,8 +155,7 @@ public class Robot extends IterativeRobot {
 			
 		case moveForward: 
 			//goes up to right in front of defense
-			
-			System.out.println(leftDriveEncoder.get());
+	    	System.out.println(AutoMethods.getEncoders() + "\n\t" + autoState + "\t" + turnMoveState);
 			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
 				autoState = cross;
@@ -155,17 +164,18 @@ public class Robot extends IterativeRobot {
 		case cross:
 			//crosses each defense here 
 			//pick on db slider
-			System.out.println("cross");
-			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
+			if(SmartDashboard.getNumber("DB/Slider 0", 0) == 4){
              	//finished = AutoMethods.crossChevalDeFrise();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 1){
             	finished = AutoMethods.crossMoat();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 2){   
             	finished = AutoMethods.crossRoughTerrain();
            }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 3){
-            	finished = AutoMethods.crossRamparts();
-           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 4){
-            	finished = AutoMethods.crossRockWall();
+                 finished = AutoMethods.crossRamparts();
+           }else  if(SmartDashboard.getNumber("DB/Slider 0", 0) == 0){
+        	   finished = AutoMethods.crossRockWall();
+           }else{
+        	   finished = AutoMethods.crossMoat();
            }
            //once finished, then go to the finished state
 		if(finished){
@@ -174,37 +184,36 @@ public class Robot extends IterativeRobot {
 		break;
 		
 		case toShootState:
-			turnMoveState = AutoMethods.turnMove(shiftDefensePosition,turnMoveState);
-			if(turnMoveState > 2){
+			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
-				autoState = shootState;
-				turnMoveState = 0;
+				autoState = finishedState;
+				System.out.println("finished");
 			}
-			break;
-		case shootState:
-			AutoMethods.setDrive(0);
-			
-			
 		break;
+		case finishedState:
+			AutoMethods.setDrive(0);
+			break;
 	}
    
     }
 
 
     public void teleopInit() {
-    	clock.start();
-    	dontStartClimbing.start();
+    	//clock.start();
+    	//dontStartClimbing.start();
       }
     
     
    
     
-    /*public void teleopPeriodic() {
-    	TeleOp.opticSensorTset();
+    public void teleopPeriodic() {
+    	
+    	//TeleOp.opticSensorTset();
     	TeleOp.drive();
-    	TeleOp.intake();
+    	//TeleOp.intake();
     	TeleOp.shiftGears();
-    	TeleOp.climber();
+    	//TeleOp.climber();
+    	//intakeMotor.set(0.5);
     	
     }
     
