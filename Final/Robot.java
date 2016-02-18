@@ -141,7 +141,7 @@ public class Robot extends IterativeRobot {
      */
      
     public void autonomousPeriodic() {
-    	if(!SmartDashboard.getBoolean("DB/Button 1")){
+    	if(SmartDashboard.getBoolean("DB/Button 1")){
     		//state machine here
     	System.out.println("AutoState: " + autoState + "\nturnMoveState: " + turnMoveState);
     	switch(autoState){
