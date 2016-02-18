@@ -125,6 +125,19 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
+       
+        SmartDashboard.putData("Auto mode", chooser);
+        
+        try 
+        {
+            new ProcessBuilder("/home/lvuser/grip").inheritIO().start();
+        } 
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     }
     
         /**
