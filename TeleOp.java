@@ -1,5 +1,5 @@
 /*Authors:
-*Adley: Debugging
+*Adley is the best programmer
 *Oskar: Debugging
 *Vikasni: Debugging
 *Yvonne: Original Author
