@@ -13,7 +13,7 @@ package org.usfirst.frc.team2643.robot;
 public class TeleOp extends Robot{
   
 	public static void intake(){
-		   intakeMotor.set(operatorStick.getY());
+		   intakeMotor.set(operatorGamePad.getY());
 	}
 	
     // add "boolean tankDrive = false" in final
