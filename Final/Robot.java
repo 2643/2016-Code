@@ -141,7 +141,8 @@ public class Robot extends IterativeRobot {
      */
      
     public void autonomousPeriodic() {
-//state machine here
+    	if(!SmartDashboard.getBoolean("DB/Button 1")){
+    		//state machine here
     	System.out.println("AutoState: " + autoState + "\nturnMoveState: " + turnMoveState);
     	switch(autoState){
 		case turnMove: 
@@ -155,7 +156,6 @@ public class Robot extends IterativeRobot {
 			
 		case moveForward: 
 			//goes up to right in front of defense
-	    	System.out.println(AutoMethods.getEncoders() + "\n\t" + autoState + "\t" + turnMoveState);
 			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
 				autoState = cross;
@@ -194,7 +194,24 @@ public class Robot extends IterativeRobot {
 			AutoMethods.setDrive(0);
 			break;
 	}
-   
+    	}else{
+    		//"Arman State" (dumb state for autonomous)
+        	System.out.println("AutoState: " + autoState + "\nturnMoveState: " + turnMoveState);
+    		switch(autoState){
+    		case 0:
+    			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
+				AutoMethods.resetEncoders();
+				autoState = finishedState;
+				System.out.println("finished");
+			}
+    			break;
+    		case finishedState:
+    			AutoMethods.resetEncoders();
+				autoState = finishedState;
+				System.out.println("finished");
+    			break;
+    		}
+    	}
     }
 
 
