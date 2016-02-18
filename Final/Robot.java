@@ -138,8 +138,8 @@ public class Robot extends IterativeRobot {
 			turnMoveState = AutoMethods.turnMove(shiftStartingPosition,turnMoveState);
 			if(turnMoveState > 2){
 				AutoMethods.resetEncoders();
-				autoState = moveForward;
 				turnMoveState = 0;
+				autoState = moveForward;
 			}
 			break;
 			
