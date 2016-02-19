@@ -7,10 +7,44 @@
 */
 
 package org.usfirst.frc.team2643.robot;
-
-
 public class TeleOp extends Robot{
-  
+
+public static void autoShift(){
+	if(!forceShifted){
+		if(speedClock.get() > .25){
+			if(getAvgStick() > .5 && getSpeed()/getAvgStick() < .8*standardStressNumber){
+				shiftSolenoid1.set(false);
+				shiftSolenoid2.set(false);
+				forceShifted = true;
+				forceShiftedFor.reset();
+			}
+		}
+	}else{
+		if(forceShiftedFor.get() > 5){
+			forceShifted = false;
+		}
+	}
+}
+
+public static double getAvgStick(){
+	double currentValue = 0;
+	if(isTankDrive){
+		currentValue = lastValue + gamePad.getY() + gamePad.getRawAxis(3);
+		lastValue =  gamePad.getY() + gamePad.getRawAxis(3);
+	}else{
+		currentValue = lastValue + gamePad.getY() + gamePad.getX();
+		lastValue = gamePad.getY() + gamePad.getX();
+	}
+	return currentValue;
+}
+public static double getSpeed(){
+	leftDriveEncoder.reset();
+	rightDriveEncoder.reset();
+	speedClock.reset();
+	return (Math.abs(leftDriveEncoder.get()) + Math.abs(rightDriveEncoder.get()))/speedClock.get();
+}
+
+
 	public static void intake(){
 		   intakeMotor.set(operatorGamePad.getY());
 	}
@@ -66,7 +100,7 @@ if(gamePad.getRawButton(10)){ //update button numbers
 		winch3.set(speed);
 	}
 
-        
+ 
     public static void tankDrive(){
     	leftPosition = gamePad.getY();
     	rightPosition = gamePad.getRawAxis(3);
@@ -89,13 +123,13 @@ if(gamePad.getRawButton(10)){ //update button numbers
 public static void shiftGears(){
 	
 		
-		if(gamePad.getRawButton(2) && !alreadyPressed){
-        	shiftSolenoid1.set(!shiftSolenoid1.get());
-        	shiftSolenoid2.set(!shiftSolenoid2.get());
-        	alreadyPressed = true;
+		if(gamePad.getRawButton(7) && !alreadyPressed){
+        	shiftSolenoid1.set(true);
+        	shiftSolenoid2.set(true);
        	 }
-       	 if(!gamePad.getRawButton(2)){
-		alreadyPressed = false;       	 
+       	 if(!gamePad.getRawButton(8)){	 
+       		shiftSolenoid1.set(false);
+        	shiftSolenoid2.set(false);
        	 }
 
          
@@ -111,7 +145,7 @@ public static void opticSensorTset() {
 }
 }
 
-    	
+  /*  	
 public static void visionProcess(){
 	  {
     	
@@ -140,6 +174,5 @@ public static void visionProcess(){
         	}
         }
     }
-}
-
-}
+    }
+    */
