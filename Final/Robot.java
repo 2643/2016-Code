@@ -1,4 +1,3 @@
-
 /*
 Vikasni: starting positions
 Justin: port numbers and solenoids
@@ -31,6 +30,7 @@ public class Robot extends IterativeRobot {
     //smartboard thing, probably needs to be changed
     double shiftStartingPosition;
     //change these numbers after testing
+    static double autonRPS;
     static double distanceBetweenDefenses = 500;
     static double distanceOverDefense = 400;
     static double distanceUntillInfront = 1000;
@@ -44,10 +44,11 @@ public class Robot extends IterativeRobot {
     //ints
     static int autoState = 0;
     static final int cross = 2;
-    static final int finishedState = 4;
+    static final int shootingState = 4;
     static final int toShootState = 3;
     static final int moveForward = 1;
     static final int turnMove = 0;
+    static final int finishedState = 5;
     static int turnMoveState = 0;
     //booleans
     static boolean alreadyPressed = false;
@@ -65,14 +66,14 @@ public class Robot extends IterativeRobot {
    // static Victor shooterMotor = new Victor(4);
     static Victor intakeMotor = new Victor(5);
     //climb motors
-   // static Victor climbArmMotor = new Victor(6);
-    //static Victor winch1 = new Victor(7);
-   // static Victor winch2 = new Victor(8);
-  //  static Victor winch3 = new Victor(9);
+    static Victor climbArmMotor = new Victor(6);
+    static Victor winch1 = new Victor(7);
+    static Victor winch2 = new Victor(8);
+    static Victor winch3 = new Victor(9);
     //encoders
     static Encoder leftDriveEncoder  = new Encoder(0,1);
     static Encoder rightDriveEncoder = new Encoder(2,3);
-    //static Encoder shooterEncoder = new Encoder(4,5);
+    static Encoder shooterEncoder = new Encoder(4,5);
     //Joysticks
     static Joystick gamePad = new Joystick(0);
     static Joystick operatorGamePad = new Joystick(1);
@@ -82,10 +83,10 @@ public class Robot extends IterativeRobot {
 	static Timer solenoidClock = new Timer();
 	*/
     //digital inputs
-   /* static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
+    static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
     static DigitalInput ballOpticSensor = new DigitalInput(8);
     static  DigitalInput topLimitSwitch = new DigitalInput(6);
-    */
+    
     //Solenoids
    // static Solenoid climbArmSolenoid = new Solenoid(3);
     //static Solenoid piston = new Solenoid(2);
@@ -186,10 +187,16 @@ public class Robot extends IterativeRobot {
 		case toShootState:
 			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
-				autoState = finishedState;
+				autoState = shootingState;
 				System.out.println("finished");
 			}
-		break;
+			break;
+		case shootingState:
+			VisionRobot.alignRobot();
+			PIDControl.setShooter(autonRPS);
+			AutoMethods.setDrive(0);
+			autoState = finishedState;
+			break;
 		case finishedState:
 			AutoMethods.setDrive(0);
 			break;
