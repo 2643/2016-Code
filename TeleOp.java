@@ -12,7 +12,8 @@ public class TeleOp extends Robot{
 public static void autoShift(){
 	if(!forceShifted){
 		if(speedClock.get() > .25){
-			if(getAvgStick() > .5 && getSpeed()/getAvgStick() < .8*standardStressNumber){
+			double speed = getSpeed();
+			if(speed != 0 && getAvgStick() > .3 && getAvgStick()/speed > 1.4*standardStressNumber){
 				shiftSolenoid1.set(false);
 				shiftSolenoid2.set(false);
 				forceShifted = true;
@@ -20,8 +21,9 @@ public static void autoShift(){
 			}
 		}
 	}else{
-		if(forceShiftedFor.get() > 5){
+		if(forceShiftedFor.get() > 4.75){
 			forceShifted = false;
+			speedClock.reset();
 		}
 	}
 }
@@ -29,19 +31,21 @@ public static void autoShift(){
 public static double getAvgStick(){
 	double currentValue = 0;
 	if(isTankDrive){
-		currentValue = lastValue + gamePad.getY() + gamePad.getRawAxis(3);
-		lastValue =  gamePad.getY() + gamePad.getRawAxis(3);
+		currentValue = lastValue + Math.abs(gamePad.getY()) + Math.abs(gamePad.getRawAxis(3));
+		lastValue =  Math.abs(gamePad.getY()) + Math.abs(gamePad.getRawAxis(3));
 	}else{
-		currentValue = lastValue + gamePad.getY() + gamePad.getX();
-		lastValue = gamePad.getY() + gamePad.getX();
+		currentValue = lastValue + Math.abs(gamePad.getY()) + Math.abs(gamePad.getX());
+		lastValue = Math.abs(gamePad.getY()) + Math.abs(gamePad.getX());
 	}
-	return currentValue;
+	return currentValue/2;
 }
+
 public static double getSpeed(){
+	double speed = (Math.abs(leftDriveEncoder.get()) + Math.abs(rightDriveEncoder.get()))/speedClock.get();
 	leftDriveEncoder.reset();
 	rightDriveEncoder.reset();
 	speedClock.reset();
-	return (Math.abs(leftDriveEncoder.get()) + Math.abs(rightDriveEncoder.get()))/speedClock.get();
+	return speed;
 }
 
 
