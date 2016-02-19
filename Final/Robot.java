@@ -1,7 +1,7 @@
 
 /*
 Vikasni: starting positions
-Justin Case: port numbers and solenoids
+Justin: port numbers and solenoids
 */
 package org.usfirst.frc.team2643.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
