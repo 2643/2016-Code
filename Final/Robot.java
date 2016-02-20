@@ -193,8 +193,8 @@ public class Robot extends IterativeRobot {
 			break;
 		case shootingState:
 			VisionRobot.alignRobot();
+			intakeMotor.set(0.75);
 			PIDControl.setShooter(autonRPS);
-			AutoMethods.setDrive(0);
 			autoState = finishedState;
 			break;
 		case finishedState:
