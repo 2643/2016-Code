@@ -24,93 +24,38 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
  
-public class Robot extends IterativeRobot
+public class VisionRobot extends Robot
 {
  
     Command autonomousCommand;
     SendableChooser chooser;
    
     //NetworkTable table;
-    int session;
-    Image frame;
-    AxisCamera camera;
+    static int session;
+    static Image frame;
+    static AxisCamera camera;
    
-    Joystick stick = new Joystick(1);
-   
-    int state = 0;
  
     double[] defaultValue = new double [0];
     double[] areas;
-    int temp = 0;
-    double[] centerXs;
-    double centerX;
-    double width;
+    static double[] centerXs;
+    static double centerX;
+    static double width;
     double distance;
     boolean position = false;
-    double MAGIC_DISTANCE_NUMBER = 1.08;
-    double MAGIC_AREA_NUMBER = 1.429;
+    final double MAGIC_DISTANCE_NUMBER = 1.08;
+    final double MAGIC_AREA_NUMBER = 1.429;
+    public static int state = 0;
+    public static int temp = 0;
  
     //NetworkTable grip = NetworkTable.getTable("GRIP/myContoursReport");
-	NetworkTable table = NetworkTable.getTable("GRIP");
-
+	static NetworkTable table = NetworkTable.getTable("GRIP");
     
-    
-   public void robotInit()
-   {
-        chooser = new SendableChooser();
-        SmartDashboard.putData("Auto mode", chooser);
-        
-        try 
-        {
-            new ProcessBuilder("/home/lvuser/grip").inheritIO().start();
-        } 
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void disabledInit()
+    public static double getDistance()
     {
- 
-    }
-   
-    public void disabledPeriodic()
-    {
-        Scheduler.getInstance().run();
-    }
-
-    public void autonomousInit()
-    {
-        autonomousCommand = (Command) chooser.getSelected();
-        if (autonomousCommand != null) autonomousCommand.start();
-    }
- 
-    public void autonomousPeriodic()
-    {
-        Scheduler.getInstance().run();
-    }
- 
-    public void teleopInit()
-    {
-        if (autonomousCommand != null) autonomousCommand.cancel();
-        Scheduler.getInstance().run();
-    }
-    
-    public void teleopPeriodic()
-    {
-    	
-        Scheduler.getInstance().run();
- 
-        while(isOperatorControl() && isEnabled())
-        {      	 
-        	for (double width : table.getNumberArray("myContoursReport/width", new double[0])) 
-        	{
-        		switch(state)
-                {
-                    case 0:
+        		
                         double[] widths = table.getNumberArray("myContoursReport/width", new double[0]);
-                        temp = 0;
+                        int temp = 0;
                         for(int i = 0;i < widths.length; i++)
                         {
                             if(widths[i] > widths[temp])
@@ -119,14 +64,49 @@ public class Robot extends IterativeRobot
                             }
                         }
 
-                        System.out.println("width: " + widths[temp] + "\ndistance: " + ((136.0/118.0)*(1.08*(20*320)/widths[temp])));
+                        System.out.println("width: " + widths[temp] + "\ndistance: " + ((140.0/118.0)*(1.08*(20*640)/widths[temp])));
                         //Timer.delay(2);
+                        return (140.0/118.0)*(1.08*(20*640)/widths[temp]);
                 }
-        	}
+    public static void alignRobot(){
+    	temp = 0;
+        for(int i = 0; i < centerXs.length; i++)
+        {
+            if(centerXs[i] > centerXs[temp])
+            {
+                temp = i;
+            }
         }
+
+        System.out.println("Center X: " + centerXs[temp]);
+
+        if(centerXs[temp] <= 310)
+            {
+                frontRightMotor.set(0.22);
+                frontLeftMotor.set(0.22);
+                backRightMotor.set(0.22);
+                backLeftMotor.set(0.22);
+                System.out.println("Turning left");
+            }
+            else if(centerXs[temp] >= 330)
+            {
+                frontRightMotor.set(-0.22);
+                frontLeftMotor.set(-0.22);
+                backRightMotor.set(-0.22);
+                backLeftMotor.set(-0.22);
+                System.out.println("Turing Right");
+            }
+            else
+            {
+                frontRightMotor.set(0);
+                frontLeftMotor.set(0);
+            backRightMotor.set(0);
+            backLeftMotor.set(0);
+            System.out.println("Stop and state is 1");
+            state = 1;
+        }
+
+        temp = 0;
     }
-   
-    public void testPeriodic() {
-        LiveWindow.run();
-    }
+
 }
