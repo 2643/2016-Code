@@ -63,6 +63,7 @@ public class VisionRobot extends Robot
                                 temp = i;
                             }
                         }
+                        //temp is the position of the largest number in widths
 
                         System.out.println("width: " + widths[temp] + "\ndistance: " + ((140.0/118.0)*(1.08*(20*640)/widths[temp])));
                         //Timer.delay(2);
@@ -77,6 +78,7 @@ public class VisionRobot extends Robot
                 temp = i;
             }
         }
+        //temp is the position of the largest number in center x's
 
         System.out.println("Center X: " + centerXs[temp]);
 
@@ -103,7 +105,6 @@ public class VisionRobot extends Robot
             backRightMotor.set(0);
             backLeftMotor.set(0);
             System.out.println("Stop and state is 1");
-            state = 1;
         }
 
         temp = 0;
