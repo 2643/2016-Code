@@ -1,17 +1,24 @@
 /*
 Vikasni: starting positions
-Justin: port numbers and solenoids
+Justin Case: port numbers and solenoids
 */
 package org.usfirst.frc.team2643.robot;
+import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.Image;
+
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.Solenoid;
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,11 +51,11 @@ public class Robot extends IterativeRobot {
     //ints
     static int autoState = 0;
     static final int cross = 2;
+    static final int finishedState = 5;
     static final int shootingState = 4;
     static final int toShootState = 3;
     static final int moveForward = 1;
     static final int turnMove = 0;
-    static final int finishedState = 5;
     static int turnMoveState = 0;
     //booleans
     static boolean alreadyPressed = false;
@@ -58,35 +65,42 @@ public class Robot extends IterativeRobot {
 	static boolean startCounting = false;
 	static boolean isTankDrive = false;
     //drive Motors
-    static Talon backLeftMotor = new Talon(3);
-    static Talon backRightMotor = new Talon(0);
-    static Talon frontLeftMotor = new Talon(2);
-    static Talon frontRightMotor = new Talon(1);
+    static Talon backLeftMotor = new Talon(6);
+    static Talon backRightMotor = new Talon(8);
+    static Talon frontLeftMotor = new Talon(7);
+    static Talon frontRightMotor = new Talon(9);
     //shooter motor stuff
-   // static Victor shooterMotor = new Victor(4);
-    static Victor intakeMotor = new Victor(5);
+    static Victor shooterMotor = new Victor(5);
+    static Victor intakeMotor = new Victor(4);
     //climb motors
-    static Victor climbArmMotor = new Victor(6);
-    static Victor winch1 = new Victor(7);
-    static Victor winch2 = new Victor(8);
-    static Victor winch3 = new Victor(9);
+   // static Victor climbArmMotor = new Victor(6);
+    //static Victor winch1 = new Victor(7);
+   // static Victor winch2 = new Victor(8);
+  //  static Victor winch3 = new Victor(9);
     //encoders
-    static Encoder leftDriveEncoder  = new Encoder(0,1);
-    static Encoder rightDriveEncoder = new Encoder(2,3);
+    static Encoder rightDriveEncoder  = new Encoder(0,1);
+    static Encoder leftDriveEncoder = new Encoder(2,3);
     static Encoder shooterEncoder = new Encoder(4,5);
     //Joysticks
     static Joystick gamePad = new Joystick(0);
-    static Joystick operatorGamePad = new Joystick(1);
+    static Joystick shooterStick = new Joystick(1);
+    static Joystick intakeController = new Joystick (2);
+   // static Joystick leftOperatorJoystick = new Joystick(1);
+    //static Joystick rightOperatorJoystick = new Joystick(2);
+    Compressor airCompressor = new Compressor(1);
+    AxisCamera cam;
+    Image frame;
+    static RobotDrive drive = new RobotDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
     //Timers
     /*static Timer clock = new Timer();
 	static Timer dontStartClimbing = new Timer();
 	static Timer solenoidClock = new Timer();
 	*/
     //digital inputs
-    static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
+   /* static  DigitalInput bottomLimitSwitch = new DigitalInput(7);
     static DigitalInput ballOpticSensor = new DigitalInput(8);
     static  DigitalInput topLimitSwitch = new DigitalInput(6);
-    
+    */
     //Solenoids
    // static Solenoid climbArmSolenoid = new Solenoid(3);
     //static Solenoid piston = new Solenoid(2);
@@ -105,6 +119,19 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
+        
+        cam = new AxisCamera("10.26.43.11");
+        frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+        drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+        if(airCompressor.getPressureSwitchValue())
+    	{
+    	    airCompressor.setClosedLoopControl(false);
+    	}
+    	else
+    	{  
+    	    airCompressor.setClosedLoopControl(true);
+    	}
     }
     
         /**
@@ -142,7 +169,7 @@ public class Robot extends IterativeRobot {
      */
      
     public void autonomousPeriodic() {
-    	if(SmartDashboard.getBoolean("DB/Button 1")){
+    	if(!SmartDashboard.getBoolean("DB/Button 1")){
     		//state machine here
     	System.out.println("AutoState: " + autoState + "\nturnMoveState: " + turnMoveState);
     	switch(autoState){
@@ -182,21 +209,21 @@ public class Robot extends IterativeRobot {
 		if(finished){
 			autoState = toShootState;
 		}
-		break;
+			break;
 		
 		case toShootState:
 			if(AutoMethods.moveForward(distanceUntillInfront, 0.5)){
 				AutoMethods.resetEncoders();
-				autoState = shootingState;
+				autoState = finishedState;
 				System.out.println("finished");
 			}
 			break;
-		case shootingState:
-			VisionRobot.alignRobot();
-			intakeMotor.set(0.75);
-			PIDControl.setShooter(autonRPS);
-			autoState = finishedState;
-			break;
+		 case shootingState:
+	            VisionRobot.alignRobot();
+	            intakeMotor.set(0.75);
+	            PIDControl.setShooter(autonRPS);
+	            autoState = finishedState;
+	            break;
 		case finishedState:
 			AutoMethods.setDrive(0);
 			break;
@@ -233,11 +260,19 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	//TeleOp.opticSensorTset();
-    	TeleOp.drive();
-    	//TeleOp.intake();
-    	TeleOp.shiftGears();
+    	//cam.getImage(frame);
+    	//CameraServer.getInstance().setImage(frame);
+    	while(isOperatorControl() && isEnabled()){
+    		TeleOp.drive();
+    		TeleOp.intake();
+    		TeleOp.shooter();
+    	}
+    	
+    	//TeleOp.shiftGears();
     	//TeleOp.climber();
     	//intakeMotor.set(0.5);
+    	
+    	
     	
     }
     
@@ -258,7 +293,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    
+    	
     }
     
 }
