@@ -93,6 +93,9 @@ public class Robot extends IterativeRobot
 	public static double speed = 0.8;
 	public static int timeToDefense = 4;
 	public static int intakeTime = 2;
+	public static int slowButton1 = 5;
+	public static int slowButton2 = 6;
+	
 	
 	//Button Magic Numbers
 	public static int intakeButton = 7;
@@ -107,23 +110,14 @@ public class Robot extends IterativeRobot
 	//timer
 	public static Timer time = new Timer();
 	
-	//Drive
-	//public static RobotDrive gamePadDrive = new RobotDrive(lFrontMotor, lBackMotor, rFrontMotor, rBackMotor);
-	//fix 
-	
-	
-	//compressor
-	//static Compressor airCompressor = new Compressor(1);
-	
-	//NetWork Tables
-	//public static NetworkTable table = NetworkTable.getTable("GRIP");
-	
 	//Camera declarations
     public static String cameraHost = "10.26.43.11";
     public static AxisCamera cam;
     public static Image frame;
-
-
+    
+    //robot drive
+    //public static RobotDrive drive = new RobotDrive(lFrontMotor, lBackMotor, rFrontMotor, rBackMotor);
+    
     Command autonomousCommand;
     SendableChooser chooser;
     
@@ -135,7 +129,11 @@ public class Robot extends IterativeRobot
         SmartDashboard.putBoolean("DB/Button 0", true);
         SmartDashboard.putBoolean("DB/Button 1", true);
         
-        */
+        
+    	drive.setInvertedMotor(MotorType.kFrontLeft, true);
+    	drive.setInvertedMotor(MotorType.kFrontRight, true);
+    	drive.setInvertedMotor(MotorType.kRearLeft, true);
+    	drive.setInvertedMotor(MotorType.kRearRight, true);*/
         //initization code
         //init();
     }
@@ -167,42 +165,6 @@ public class Robot extends IterativeRobot
 			lFrontMotor.set(0);
 			rFrontMotor.set(0);
 		}
-		
-		/*if(SmartDashboard.getBoolean( "DB/Button 0", false )  &&   time.get() >= timeToDefense) // It will not move
-		{
-			lBackMotor.set(0);
-			rBackMotor.set(0);
-			lFrontMotor.set(0);
-			rFrontMotor.set(0);
-		}
-		else if(  SmartDashboard.getBoolean( "DB/Button 0", false ) && time.get() <= timeToDefense ) // It will go forwards
-		{
-			rFrontMotor.set(0.5);
-			rBackMotor.set(0.5);
-			lFrontMotor.set(-0.5);
-			lBackMotor.set(-0.5);			
-		}
-		else if(SmartDashboard.getBoolean( "DB/Button 1", false )  &&   time.get() >= timeToDefense) // It will not move
-		{
-			lBackMotor.set(0);
-			rBackMotor.set(0);
-			lFrontMotor.set(0);
-			rFrontMotor.set(0);
-		}
-		else if(  SmartDashboard.getBoolean("DB/Button 1", false)  && time.get() <= timeToDefense ) // It will go backwards	
-		{
-			rFrontMotor.set(-0.5);
-			rBackMotor.set(-0.5);
-			lFrontMotor.set(0.5);
-			lBackMotor.set(0.5);	
-		}
-		else 
-		{	
-			lBackMotor.set(0);
-			rBackMotor.set(0);
-			lFrontMotor.set(0);
-		    rFrontMotor.set(0);   
-		}*/
 		
 	}
 		
@@ -236,142 +198,80 @@ public class Robot extends IterativeRobot
         /*cam = new AxisCamera(cameraHost);
         frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);*/
 	}
-    
-    /*public static void compressor()
-    {
-    	if(airCompressor.getPressureSwitchValue())
-		{
-			//if the air is full, do nothing 
-			airCompressor.setClosedLoopControl(false);
-		}
-		else
-		{	
-			//else start compression
-			airCompressor.setClosedLoopControl(true);
-		}
-    }*/
-	
+
 	public static void drive()
-	{
-		/*if(gamePad.getRawButton(tankD)) //if button 9 is pressed, set to true
+	{	
+		if(gamePad.getRawButton(8))
 		{
-			driveToggle = true;
+			driveToggle = true; //arcade
 		}
-		else if(gamePad.getRawButton(arcadeD)) //if button 10 is pressed, set to false
+		else if(gamePad.getRawButton(7))
 		{
-			driveToggle = false;
+			driveToggle = false; //tank
 		}
 		
-		if(driveToggle) //if true
+		if(!driveToggle)
 		{
-			//tank drive
-			rFrontMotor.set(-gamePad.getRawAxis(3));
-			lFrontMotor.set(gamePad.getY());
-			rBackMotor.set(-gamePad.getRawAxis(3));
-			lBackMotor.set(gamePad.getY());
+			if(gamePad.getRawButton(slowButton1) || gamePad.getRawButton(slowButton2)) //slow down the drive
+			{
+				rFrontMotor.set(-gamePad.getRawAxis(5) * 0.75);
+				lFrontMotor.set(gamePad.getY() * 0.75);
+				rBackMotor.set(-gamePad.getRawAxis(5) * 0.75);
+				lBackMotor.set(gamePad.getY() * 0.75);
+			}
+			else //regular drive train
+			{
+				rFrontMotor.set(-gamePad.getRawAxis(5));
+				lFrontMotor.set(gamePad.getY());
+				rBackMotor.set(-gamePad.getRawAxis(5));
+				lBackMotor.set(gamePad.getY());
+			}
 		}
-		else //if false
+		/*else
 		{
-			//set to arcade, usually set to arcade because of this
-			gamePadDrive.arcadeDrive(gamePad, true);  	 
+			if(gamePad.getRawButton(slowButton1) || gamePad.getRawButton(slowButton2))
+			{
+				drive.arcadeDrive(gamePad.getX() * 0.75, gamePad.getY() * 0.75, true);
+			}
+			else
+			{
+				drive.arcadeDrive(gamePad.getX(), gamePad.getY(), true);
+			}
 		}*/
-		
-		rFrontMotor.set(-gamePad.getRawAxis(3));
-		lFrontMotor.set(gamePad.getY());
-		rBackMotor.set(-gamePad.getRawAxis(3));
-		lBackMotor.set(gamePad.getY());
 	}
-		
-	/*public static void shifting()
-	{
-		if(gamePad.getRawButton(fastShiftingButton))	
-		{
-			//if press button 7, set to true
-			shiftingToggle = true;
-		}
-		else if(gamePad.getRawButton(slowShiftingButton)) 
-		{
-			//if button 8, set to false
-			shiftingToggle = false;
-		}
-		
-		if(shiftingToggle)
-		{
-			//if ture, low gear or high gear?
-			leftShiftingSolenoid.set(on);
-			rightShiftingSolenoid.set(on);
-			System.out.println("Second Gear");
-		}
-		else 
-		{
-			//if false, low gear or high gear?
-			leftShiftingSolenoid.set(off);
-			rightShiftingSolenoid.set(off);
-		
-			System.out.println("First Gear");
-		}
-	}*/
 	
 	public static void intake()
 	{
-		intakeMotor.set((operatorPad.getRawAxis(1)) * speed); //left joystick on x box fps pro run on class mate 
-	}
-	
-	public static void intakeState()
-	{
-		//set intake to y axis of the operator controller and slow it down a bit
-		intakeMotor.set((operatorPad.getRawAxis(1)) * speed); //left joystick on x box fps pro run on class mate 
-		
-		if(operatorPad.getRawButton(1))
+		//intakeMotor.set((operatorPad.getRawAxis(1)) * speed); //left joystick on x box fps pro run on class mate
+
+		/*if(gamePad.getRawAxis(2) > 0)
 		{
-			switch(state)
-			{
-				case 0:
-					intakeTimer.reset();
-					
-					state = 1;
-				
-				case 1:
-					if(operatorPad.getRawButton(1))
-					{
-						intakeTimer.start();
-						if(intakeTimer.get() >= intakeTime)
-						{
-							intakeMotor.set(0);
-						}
-						else
-						{
-							intakeMotor.set(0.6);
-						}
-					}
-					else if(operatorPad.getRawButton(3))
-					{
-						intakeMotor.set(-0.6);
-					}
-					else
-					{
-						intakeMotor.set(0);
-					}
-					
-					//state = 0;
-			}
+			intakeMotor.set(gamePad.getRawAxis(3));
 		}
-		else if(operatorPad.getRawButton(3))
+		else if(gamePad.getRawAxis(3) > 0)
 		{
-			intakeMotor.set(-0.6);
+			intakeMotor.set(-gamePad.getRawAxis(4));
 		}
 		else
 		{
 			intakeMotor.set(0);
-		}
+		}*/	
+			
+			//intake
+			if(gamePad.getPOV() == 0)
+			{
+				intakeMotor.set(1.00);
+			}
+			else if(gamePad.getPOV() == 180)
+			{
+				intakeMotor.set(-1.00);
+			}
+			else
+			{
+				intakeMotor.set(0);
+			}
 	}
-	
-	/*public static void shooter()
-	{
-		//set shooter to y axis of the other joystick and slow it down a bit 
-		shooterMotor.set((operatorPad.getRawAxis(5)) * speed); //right joystick on x box fps pro run on class mate
-	}*/
-	                                                                                                                                                
+                                                                                                                                              
 	public static void camera()
 	{
 		//more cmaera code, gets the image and should display onto the smartdash board
